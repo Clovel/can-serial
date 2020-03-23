@@ -31,7 +31,7 @@ extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 /* Thread management functions ------------------------- */
 cipErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID,
     const uint8_t pCallerID,
-    const cipPutMessageFct_t pFct)
+    const canSerialPutMessageFct_t pFct)
 {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {

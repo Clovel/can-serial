@@ -55,7 +55,7 @@ typedef canSerialMode_t canMode_t;
 typedef uint8_t canSerialID_t;
 typedef char *cipPort_t;
 
-typedef int (*cipPutMessageFct_t)(const uint8_t, const uint32_t, const uint8_t, const uint8_t * const, const uint32_t);
+typedef int (*canSerialPutMessageFct_t)(const uint8_t, const uint32_t, const uint8_t, const uint8_t * const, const uint32_t);
 
 /* CAN over serial interface ------------------------------- */
 /**
@@ -149,7 +149,7 @@ cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID, const uint8_t pCallerID, const cipPutMessageFct_t pFct);
+cipErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID, const uint8_t pCallerID, const canSerialPutMessageFct_t pFct);
 
 /**
  * @brief Print a CAN over serial message (long format)

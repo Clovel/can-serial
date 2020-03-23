@@ -38,7 +38,7 @@ typedef struct _cipInternalVariables {
     /* Rx Thread */
     bool rxThreadOn;
     uint8_t callerID;
-    cipPutMessageFct_t putMessageFct;
+    canSerialPutMessageFct_t putMessageFct;
     pthread_mutex_t mutex;
 } canSerialInternalVars_t;
 
