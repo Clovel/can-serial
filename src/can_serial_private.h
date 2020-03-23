@@ -21,7 +21,7 @@
 /* Type definitions ------------------------------------ */
 typedef int canSerialPortFd_t;
 
-typedef struct _cipInternalVariables {
+typedef struct _canSerialInternalVars {
     uint8_t         instanceID;
     canSerialMode_t mode;
     bool            isInitialized;
