@@ -23,7 +23,7 @@
 /* Type definitions ------------------------------------ */
 
 
-extern void CIP_printMessageShort(const cipMessage_t * const pMsg);
+extern void CANSerial_printMessageShort(const cipMessage_t * const pMsg);
 
 /* Support functions ----------------------------------- */
 int inputMessage(const uint8_t pID, 
@@ -44,7 +44,7 @@ int inputMessage(const uint8_t pID,
         lMsg.data[i] = pData[i];
     }
 
-    CIP_printMessageShort(&lMsg);
+    CANSerial_printMessageShort(&lMsg);
 
     return 0;
 }
@@ -59,13 +59,13 @@ int main(const int argc, const char * const * const argv) {
     unsigned int lErrorCode = 0U;
 
     /* Initialize the CAN over serial module */
-    if(1U != (lErrorCode = CIP_init(0U, can_serial_MODE_NORMAL, 15024))) {
-        printf("[ERROR] CIP_init failed w/ error code %u.\n", lErrorCode);
+    if(1U != (lErrorCode = CANSerial_init(0U, can_serial_MODE_NORMAL, 15024))) {
+        printf("[ERROR] CANSerial_init failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
 
-    if(1U != (lErrorCode = CIP_setPutMessageFunction(0U, 0U, inputMessage))) {
-        printf("[ERROR] CIP_setPutMessageFunction failed w/ error code %u.\n", lErrorCode);
+    if(1U != (lErrorCode = CANSerial_setPutMessageFunction(0U, 0U, inputMessage))) {
+        printf("[ERROR] CANSerial_setPutMessageFunction failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
 
@@ -87,8 +87,8 @@ int main(const int argc, const char * const * const argv) {
         0x00000000U
     };
 
-    if(1U != (lErrorCode = CIP_startRxThread(0U))) {
-        printf("[ERROR] CIP_startRxThread failed w/ error code %u.\n", lErrorCode);
+    if(1U != (lErrorCode = CANSerial_startRxThread(0U))) {
+        printf("[ERROR] CANSerial_startRxThread failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
 
@@ -96,8 +96,8 @@ int main(const int argc, const char * const * const argv) {
 
     /* Receive the CAN message over IP */
     while(lErrorCode == can_serial_ERROR_NONE && 0 >= lReadBytes) {
-        if(1U != (lErrorCode = CIP_send(0U, lMsg.id, lMsg.size, lMsg.data, lMsg.flags))) {
-            printf("[ERROR] CIP_send failed w/ error code %u.\n", lErrorCode);
+        if(1U != (lErrorCode = CANSerial_send(0U, lMsg.id, lMsg.size, lMsg.data, lMsg.flags))) {
+            printf("[ERROR] CANSerial_send failed w/ error code %u.\n", lErrorCode);
             exit(EXIT_FAILURE);
         }
 
@@ -109,7 +109,7 @@ int main(const int argc, const char * const * const argv) {
         exit(EXIT_FAILURE);
     }
 
-    CIP_printMessage(&lMsg);
+    CANSerial_printMessage(&lMsg);
 
     return EXIT_SUCCESS;
 }

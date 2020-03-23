@@ -19,16 +19,16 @@
 /* Type definitions ------------------------------------ */
 
 /* Global variables ------------------------------------ */
-cipInternalStruct_t gCIP;
+canSerialInternalVars_t gCANSerial;
 
 /* CAN over serial main functions -------------------------- */
-cipErrorCode_t CIP_createModule(const cipID_t pID) {
+cipErrorCode_t CANSerial_createModule(const cipID_t pID) {
     if(can_serial_MAX_NB_MODULES <= pID) {
         return can_serial_ERROR_ARG;
     }
 
     /* check if the module already exists */
-    if(gCIP.cipInstanceID != pID) {
+    if(gCANSerial.instanceID != pID) {
         return can_serial_ERROR_ARG;
     }
 
@@ -37,133 +37,133 @@ cipErrorCode_t CIP_createModule(const cipID_t pID) {
     return can_serial_ERROR_NONE;
 }
 
-cipErrorCode_t CIP_init(const cipID_t pID, const cipMode_t pCIPMode, const cipPort_t pPort) {
+cipErrorCode_t CANSerial_init(const cipID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort) {
     /* Check the ID */
-    if(pID != gCIP.cipInstanceID) {
-        printf("[ERROR] <CIP_init> No CAN-IP module has the ID %u\n", pID);
+    if(pID != gCANSerial.instanceID) {
+        printf("[ERROR] <CANSerial_init> No CAN-IP module has the ID %u\n", pID);
         return can_serial_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
-    if(gCIP.isInitialized) {
+    if(gCANSerial.isInitialized) {
         /* Module is already initialized,
          * so we do nothing */
-        printf("[ERROR] <CIP_init> CAN-IP module %u is already initialized.\n", pID);
+        printf("[ERROR] <CANSerial_init> CAN-IP module %u is already initialized.\n", pID);
         /* TODO : Maybe reset ? */
         return can_serial_ERROR_ALREADY_INIT;
     }
 
     /* Initialize the module */
-    gCIP.cipMode       = pCIPMode;
-    gCIP.cipInstanceID = pID;
-    gCIP.isStopped     = false;
+    gCANSerial.mode       = pCANSerialMode;
+    gCANSerial.instanceID = pID;
+    gCANSerial.isStopped     = false;
 
     /* Set port */
-    gCIP.canPort = pPort;
+    gCANSerial.canPort = pPort;
 
     /* Generate random ID */
     time_t lTime;
     srand((unsigned)time(&lTime));
-    gCIP.randID  = (rand() & 0xFFU) << 0U;
-    gCIP.randID |= (rand() & 0xFFU) << 8U;
-    gCIP.randID |= (rand() & 0xFFU) << 16U;
-    gCIP.randID |= (rand() & 0xFFU) << 24U;
-    printf("[DEBUG] Generated random ID : %u\n", gCIP.randID);
+    gCANSerial.randID  = (rand() & 0xFFU) << 0U;
+    gCANSerial.randID |= (rand() & 0xFFU) << 8U;
+    gCANSerial.randID |= (rand() & 0xFFU) << 16U;
+    gCANSerial.randID |= (rand() & 0xFFU) << 24U;
+    printf("[DEBUG] Generated random ID : %u\n", gCANSerial.randID);
 
     /* Initialize the socket */
-    if(can_serial_ERROR_NONE != CIP_initCanSocket(pID)) {
-        printf("[ERROR] <CIP_init> Failed to initialize socket w/ CIP_initCanSocket\n");
+    if(can_serial_ERROR_NONE != CANSerial_initCanSocket(pID)) {
+        printf("[ERROR] <CANSerial_init> Failed to initialize socket w/ CANSerial_initCanSocket\n");
         return can_serial_ERROR_NET;
     }
 
     /* Initialize thread related variables */
-    gCIP.rxThreadOn    = false;
-    gCIP.callerID      = 0U;
-    gCIP.putMessageFct = NULL;
+    gCANSerial.rxThreadOn    = false;
+    gCANSerial.callerID      = 0U;
+    gCANSerial.putMessageFct = NULL;
 
-    gCIP.isInitialized = true;
+    gCANSerial.isInitialized = true;
 
     return can_serial_ERROR_NONE;
 }
 
-cipErrorCode_t CIP_isInitialized(const cipID_t pID, bool * const pIsInitialized) {
+cipErrorCode_t CANSerial_isInitialized(const cipID_t pID, bool * const pIsInitialized) {
     if(NULL != pIsInitialized
-        && gCIP.cipInstanceID == pID)
+        && gCANSerial.instanceID == pID)
     {
-        *pIsInitialized = gCIP.isInitialized;
+        *pIsInitialized = gCANSerial.isInitialized;
     } else {
-        printf("[ERROR] <CIP_isInitialized> No CAN-IP module has the ID %u.\n", pID);
+        printf("[ERROR] <CANSerial_isInitialized> No CAN-IP module has the ID %u.\n", pID);
         return can_serial_ERROR_ARG;
     }
 
     return can_serial_ERROR_NONE;
 }
 
-cipErrorCode_t CIP_reset(const cipID_t pID, const cipMode_t pCIPMode) {
-    if(!gCIP.isInitialized) {
+cipErrorCode_t CANSerial_reset(const cipID_t pID, const canSerialMode_t pCANSerialMode) {
+    if(!gCANSerial.isInitialized) {
         /* You shouldn't "reset" a non-initialized module */
-        printf("[ERROR] <CIP_reset> CAN-IP module %u is not initialized, cannot reset.\n", pID);
+        printf("[ERROR] <CANSerial_reset> CAN-IP module %u is not initialized, cannot reset.\n", pID);
         return can_serial_ERROR_NOT_INIT;
     }
 
-    gCIP.isStopped = true;
-    gCIP.isInitialized = false;
+    gCANSerial.isStopped = true;
+    gCANSerial.isInitialized = false;
 
     /* Close the socket */
-    if(can_serial_ERROR_NONE != CIP_closeSocket(pID)) {
+    if(can_serial_ERROR_NONE != CANSerial_closeSocket(pID)) {
         return can_serial_ERROR_NET;
     }
 
-    return CIP_init(pID, pCIPMode, gCIP.canPort);
+    return CANSerial_init(pID, pCANSerialMode, gCANSerial.canPort);
 }
 
-cipErrorCode_t CIP_stop(const cipID_t pID) {
+cipErrorCode_t CANSerial_stop(const cipID_t pID) {
     (void)pID; /* TODO : Multiline CAN */
 
-    if(!gCIP.isInitialized) {
-        printf("[ERROR] <CIP_stop> CAN-IP module %u is not initialized, cannot stop it.\n", pID);
+    if(!gCANSerial.isInitialized) {
+        printf("[ERROR] <CANSerial_stop> CAN-IP module %u is not initialized, cannot stop it.\n", pID);
         return can_serial_ERROR_NOT_INIT;
     }
     
-    gCIP.isStopped = true;
+    gCANSerial.isStopped = true;
 
     return can_serial_ERROR_NONE;
 }
 
-cipErrorCode_t CIP_restart(const cipID_t pID) {
+cipErrorCode_t CANSerial_restart(const cipID_t pID) {
     (void)pID; /* TODO : Multiline CAN */
 
-    if(!gCIP.isInitialized) {
-        printf("[ERROR] <CIP_restart> CAN-IP module %u is not initialized, cannot restart it.\n", pID);
+    if(!gCANSerial.isInitialized) {
+        printf("[ERROR] <CANSerial_restart> CAN-IP module %u is not initialized, cannot restart it.\n", pID);
         return can_serial_ERROR_NOT_INIT;
     }
     
-    gCIP.isStopped = false;
+    gCANSerial.isStopped = false;
 
     return can_serial_ERROR_NONE;
 }
 
-cipErrorCode_t CIP_process(const cipID_t pID) {
+cipErrorCode_t CANSerial_process(const cipID_t pID) {
     (void)pID;
 
     /* Check if the module is already initialized */
-    if(!gCIP.isInitialized) {
-        printf("[ERROR] <CIP_rxThread> CAN-IP module %u is not initialized.\n", gCIP.cipInstanceID);
+    if(!gCANSerial.isInitialized) {
+        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial.instanceID);
         return can_serial_ERROR_NOT_INIT;
     }
 
-    if(NULL == gCIP.putMessageFct) {
-        printf("[ERROR] <CIP_rxThread> Message buffer getter function is NULL.\n");
+    if(NULL == gCANSerial.putMessageFct) {
+        printf("[ERROR] <CANSerial_rxThread> Message buffer getter function is NULL.\n");
         return can_serial_ERROR_CONFIG;
     }
 
     cipErrorCode_t lErrorCode = can_serial_ERROR_NONE;
 
-    if(!gCIP.rxThreadOn) {
+    if(!gCANSerial.rxThreadOn) {
         /* Start reception thread */
-        lErrorCode = CIP_startRxThread(pID);
+        lErrorCode = CANSerial_startRxThread(pID);
         if(can_serial_ERROR_NONE != lErrorCode) {
-            printf("[ERROR] <CIP_rxThread> CIP_startRxThread failed w/ error code %u\n", lErrorCode);
+            printf("[ERROR] <CANSerial_rxThread> CANSerial_startRxThread failed w/ error code %u\n", lErrorCode);
             return can_serial_ERROR_SYS;
         }
     }

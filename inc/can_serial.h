@@ -4,8 +4,8 @@
  * @file can_serial.h
  */
 
-#ifndef can_serial_H
-#define can_serial_H
+#ifndef CAN_SERIAL_H
+#define CAN_SERIAL_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,9 +25,9 @@ extern "C" {
 /* Define this beforehand if you want 
  * several CAN over serial modules. 
  */
-#ifndef can_serial_MAX_NB_MODULES
-#define can_serial_MAX_NB_MODULES 1U
-#endif /* can_serial_MAX_NB_MODULES */
+#ifndef CAN_SERIAL_MAX_NB_MODULES
+#define CAN_SERIAL_MAX_NB_MODULES 1U
+#endif /* CAN_SERIAL_MAX_NB_MODULES */
 
 /* Type definitions ------------------------------------ */
 typedef struct _cipMessage {
@@ -35,18 +35,17 @@ typedef struct _cipMessage {
     uint8_t  size;
     uint8_t  data[CAN_MESSAGE_MAX_SIZE];
     uint32_t flags;
-    uint32_t randID; /**< Random ID of the message sender */
 } cipMessage_t;
 
 typedef cipMessage_t canMessage_t;
 
-typedef enum _cipModes {
+typedef enum _modes {
     can_serial_MODE_UNKNOWN = 0U,
     can_serial_MODE_NORMAL  = 1U,
     can_serial_MODE_FD      = 2U
-} cipMode_t;
+} canSerialMode_t;
 
-typedef cipMode_t canMode_t;
+typedef canSerialMode_t canMode_t;
 
 typedef uint8_t cipID_t;
 typedef int cipPort_t;
@@ -61,7 +60,7 @@ typedef int (*cipPutMessageFct_t)(const uint8_t, const uint32_t, const uint8_t, 
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_createModule(const cipID_t pID);
+cipErrorCode_t CANSerial_createModule(const cipID_t pID);
 
 /**
  * @brief CAN over serial initialisation
@@ -70,7 +69,7 @@ cipErrorCode_t CIP_createModule(const cipID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_init(const cipID_t pID, const cipMode_t pCIPMode, const cipPort_t pPort);
+cipErrorCode_t CANSerial_init(const cipID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort);
 
 /**
  * @brief CAN over serial check for initialisation
@@ -79,7 +78,7 @@ cipErrorCode_t CIP_init(const cipID_t pID, const cipMode_t pCIPMode, const cipPo
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_isInitialized(const cipID_t pID, bool * const pIsInitialized);
+cipErrorCode_t CANSerial_isInitialized(const cipID_t pID, bool * const pIsInitialized);
 
 /**
  * @brief CAN over serial reset
@@ -88,7 +87,7 @@ cipErrorCode_t CIP_isInitialized(const cipID_t pID, bool * const pIsInitialized)
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_reset(const cipID_t pID, const cipMode_t pCIPMode);
+cipErrorCode_t CANSerial_reset(const cipID_t pID, const canSerialMode_t pCANSerialMode);
 
 /**
  * @brief CAN over serial stop
@@ -97,7 +96,7 @@ cipErrorCode_t CIP_reset(const cipID_t pID, const cipMode_t pCIPMode);
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_stop(const cipID_t pID);
+cipErrorCode_t CANSerial_stop(const cipID_t pID);
 
 /**
  * @brief CAN over serial restart
@@ -106,7 +105,7 @@ cipErrorCode_t CIP_stop(const cipID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_restart(const cipID_t pID);
+cipErrorCode_t CANSerial_restart(const cipID_t pID);
 
 /** 
  * @brief CAN over serial send
@@ -120,7 +119,7 @@ cipErrorCode_t CIP_restart(const cipID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_send(const cipID_t pID,
+cipErrorCode_t CANSerial_send(const cipID_t pID,
     const uint32_t pCANID,
     const uint8_t pSize,
     const uint8_t * const pData,
@@ -134,7 +133,7 @@ cipErrorCode_t CIP_send(const cipID_t pID,
  * 
  * @return error_code
  */
-cipErrorCode_t CIP_recv(const cipID_t pID, cipMessage_t * const pMsg, ssize_t * const pReadBytes);
+cipErrorCode_t CANSerial_recv(const cipID_t pID, cipMessage_t * const pMsg, ssize_t * const pReadBytes);
 
 /**
  * @brief Sets the function used to give a message to
@@ -145,32 +144,32 @@ cipErrorCode_t CIP_recv(const cipID_t pID, cipMessage_t * const pMsg, ssize_t * 
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_setPutMessageFunction(const cipID_t pID, const uint8_t pCallerID, const cipPutMessageFct_t pFct);
+cipErrorCode_t CANSerial_setPutMessageFunction(const cipID_t pID, const uint8_t pCallerID, const cipPutMessageFct_t pFct);
 
 /**
  * @brief Print a CAN over serial message (long format)
  * 
  * @param[in]   pMsg    CAN Message to print
  */
-void CIP_printMessage(const cipMessage_t * const pMsg);
+void CANSerial_printMessage(const cipMessage_t * const pMsg);
 
 /**
  * @brief Print a CAN over serial message (short format)
  * 
  * @param[in]   pMsg    CAN Message to print
  */
-void CIP_printMessageShort(const cipMessage_t * const pMsg);
+void CANSerial_printMessageShort(const cipMessage_t * const pMsg);
 
 /**
  * @brief CAN over serial process
  * This function can only be called from the exterior 
- * if CIP is compiled to use a non-threaded process
+ * if CANSerial is compiled to use a non-threaded process
  * 
  * @param[in]   pID     ID of the driver used.
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_process(const cipID_t pID);
+cipErrorCode_t CANSerial_process(const cipID_t pID);
 
 /**
  * @brief Starts the receiving thread.
@@ -179,7 +178,7 @@ cipErrorCode_t CIP_process(const cipID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_startRxThread(const cipID_t pID);
+cipErrorCode_t CANSerial_startRxThread(const cipID_t pID);
 
 /**
  * @brief Getter for the "Thread On" variable
@@ -189,10 +188,10 @@ cipErrorCode_t CIP_startRxThread(const cipID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CIP_isRxThreadOn(const cipID_t pID, bool * const pOn);
+cipErrorCode_t CANSerial_isRxThreadOn(const cipID_t pID, bool * const pOn);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* can_serial_H */
+#endif /* CAN_SERIAL_H */

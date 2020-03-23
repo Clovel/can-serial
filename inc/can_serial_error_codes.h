@@ -4,8 +4,8 @@
  * @file can_serial_error_codes.h
  */
 
-#ifndef can_serial_ERROR_CODES_H
-#define can_serial_ERROR_CODES_H
+#ifndef CAN_SERIAL_ERROR_CODES_H
+#define CAN_SERIAL_ERROR_CODES_H
 
 /* Includes -------------------------------------------- */
 
@@ -24,4 +24,4 @@ typedef enum _cipErrorCodes {
     can_serial_ERROR_CONFIG       = 8
 } cipErrorCode_t;
 
-#endif /* can_serial_ERROR_CODES_H */
+#endif /* CAN_SERIAL_ERROR_CODES_H */

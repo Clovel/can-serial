@@ -4,8 +4,8 @@
  * @file can_serial_private.h
  */
 
-#ifndef can_serial_PRIVATE_H
-#define can_serial_PRIVATE_H
+#ifndef CAN_SERIAL_PRIVATE_H
+#define CAN_SERIAL_PRIVATE_H
 
 /* Includes -------------------------------------------- */
 #include "can_serial.h"
@@ -22,13 +22,10 @@
 typedef int cipSocket_t;
 
 typedef struct _cipInternalVariables {
-    uint8_t   cipInstanceID; /* TODO : Multiline CAN */
-    cipMode_t cipMode;
-    bool      isInitialized;
-    bool      isStopped;
-
-    /* Random ID */
-    uint32_t randID; /**< Random ID to ignore our own messages upon reception */
+    uint8_t         instanceID;
+    canSerialMode_t mode;
+    bool            isInitialized;
+    bool            isStopped;
 
     /* Socket */
     cipSocket_t         canSocket; /* The socket used to communicate CAN frames */
@@ -43,9 +40,9 @@ typedef struct _cipInternalVariables {
     uint8_t callerID;
     cipPutMessageFct_t putMessageFct;
     pthread_mutex_t mutex;
-} cipInternalStruct_t;
+} canSerialInternalVars_t;
 
 /* Private functions ----------------------------------- */
-cipErrorCode_t CIP_startRxThread(const cipID_t pID);
+cipErrorCode_t CANSerial_startRxThread(const cipID_t pID);
 
-#endif /* can_serial_PRIVATE_H */
+#endif /* CAN_SERIAL_PRIVATE_H */

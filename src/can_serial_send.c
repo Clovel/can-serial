@@ -25,30 +25,30 @@
 /* Static variables ------------------------------------ */
 
 /* Extern variables ------------------------------------ */
-extern cipInternalStruct_t gCIP;
+extern canSerialInternalVars_t gCANSerial;
 
 
-cipErrorCode_t CIP_send(const cipID_t pID,
+cipErrorCode_t CANSerial_send(const cipID_t pID,
     const uint32_t pCANID,
     const uint8_t pSize,
     const uint8_t * const pData,
     const uint32_t pFlags)
 {
-    pthread_mutex_lock(&gCIP.mutex);
+    pthread_mutex_lock(&gCANSerial.mutex);
 
     /* Check the ID */
-    if(pID != gCIP.cipInstanceID) {
-        printf("[ERROR] <CIP_send> No CAN-IP module has the ID %u\n", pID);
+    if(pID != gCANSerial.instanceID) {
+        printf("[ERROR] <CANSerial_send> No CAN-IP module has the ID %u\n", pID);
         return can_serial_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
-    if(!gCIP.isInitialized) {
-        printf("[ERROR] <CIP_rxThread> CAN-IP module %u is not initialized.\n", gCIP.cipInstanceID);
+    if(!gCANSerial.isInitialized) {
+        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial.instanceID);
         return can_serial_ERROR_NOT_INIT;
     }
 
-    /* Build CIP message */
+    /* Build CANSerial message */
     cipMessage_t lMsg;
     memset(lMsg.data, 0, CAN_MESSAGE_MAX_SIZE);
     lMsg.id    = pCANID;
@@ -59,22 +59,22 @@ cipErrorCode_t CIP_send(const cipID_t pID,
     }
     
     /* Set the random ID in the message */
-    lMsg.randID = gCIP.randID;
+    lMsg.randID = gCANSerial.randID;
 
     ssize_t lSentBytes = 0;
 
     errno = 0;
-    lSentBytes = sendto(gCIP.canSocket, (const void *)&lMsg, sizeof(cipMessage_t), 0, 
-        (const struct sockaddr *)&gCIP.socketInAddress, sizeof(gCIP.socketInAddress));
+    lSentBytes = sendto(gCANSerial.canSocket, (const void *)&lMsg, sizeof(cipMessage_t), 0, 
+        (const struct sockaddr *)&gCANSerial.socketInAddress, sizeof(gCANSerial.socketInAddress));
     if(sizeof(cipMessage_t) != lSentBytes) {
-        printf("[ERROR] <CIP_send> sendto failed !\n");
+        printf("[ERROR] <CANSerial_send> sendto failed !\n");
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
         return can_serial_ERROR_NET;
     }
 
-    pthread_mutex_unlock(&gCIP.mutex);
+    pthread_mutex_unlock(&gCANSerial.mutex);
 
     return can_serial_ERROR_NONE;
 }

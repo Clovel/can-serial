@@ -4,8 +4,8 @@
  * @file can_serial_socket_mgt.c
  */
 
-#ifndef can_serial_SOCKET_MGT_H
-#define can_serial_SOCKET_MGT_H
+#ifndef CAN_SERIAL_SOCKET_MGT_H
+#define CAN_SERIAL_SOCKET_MGT_H
 
 /* Includes -------------------------------------------- */
 #include "can_serial_error_codes.h"
@@ -18,7 +18,7 @@
 /* Global variables ------------------------------------ */
 
 /* Socket management functions ------------------------- */
-cipErrorCode_t CIP_initCanSocket(const cipID_t pID);
-cipErrorCode_t CIP_closeSocket(const cipID_t pID);
+cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID);
+cipErrorCode_t CANSerial_closeSocket(const cipID_t pID);
 
-#endif /* can_serial_SOCKET_MGT_H */
+#endif /* CAN_SERIAL_SOCKET_MGT_H */
