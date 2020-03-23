@@ -45,6 +45,7 @@ canSerialErrorCode_t CANSerial_initSerialPort(const canSerialID_t pID) {
         return CAN_SERIAL_ERROR_SYS;
     }
 
+    errno = 0;
     if(0 > fcntl(gCANSerial[pID].fd, F_SETFL, 0)) {/* ??? */
         /* Could not set the file descriptor's status flags */
         if(0 != errno) {
