@@ -12,7 +12,7 @@
 /* Defines --------------------------------------------- */
 
 /* Type definitions ------------------------------------ */
-typedef enum _cipErrorCodes {
+typedef enum _canSerialErrorCodes {
     CAN_SERIAL_ERROR_UNKNOWN      = 0U,
     CAN_SERIAL_ERROR_NONE         = 1,
     CAN_SERIAL_ERROR_ARG          = 2,
@@ -22,6 +22,6 @@ typedef enum _cipErrorCodes {
     CAN_SERIAL_ERROR_NOT_INIT     = 6,
     CAN_SERIAL_ERROR_STOPPED      = 7,
     CAN_SERIAL_ERROR_CONFIG       = 8
-} cipErrorCode_t;
+} canSerialErrorCode_t;
 
 #endif /* CAN_SERIAL_ERROR_CODES_H */

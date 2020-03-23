@@ -29,7 +29,7 @@
 /* Extern variables ------------------------------------ */
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
-cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg, ssize_t * const pReadBytes) {
+canSerialErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg, ssize_t * const pReadBytes) {
     pthread_mutex_lock(&gCANSerial[pID].mutex);
     
     /* Check the ID */

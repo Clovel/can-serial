@@ -28,7 +28,7 @@
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 
-cipErrorCode_t CANSerial_send(const canSerialID_t pID,
+canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
     const uint32_t pCANID,
     const uint8_t pSize,
     const uint8_t * const pData,

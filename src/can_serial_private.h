@@ -43,6 +43,6 @@ typedef struct _cipInternalVariables {
 } canSerialInternalVars_t;
 
 /* Private functions ----------------------------------- */
-cipErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
 
 #endif /* CAN_SERIAL_PRIVATE_H */

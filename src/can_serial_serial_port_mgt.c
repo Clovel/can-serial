@@ -39,7 +39,7 @@
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 /* Socket management functions ------------------------- */
-static cipErrorCode_t listNetItfs(void) {
+static canSerialErrorCode_t listNetItfs(void) {
     /* List available network interfaces */
     struct ifaddrs *lIfAddrs = NULL;
 
@@ -69,7 +69,7 @@ static cipErrorCode_t listNetItfs(void) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
     (void) pID;
 
     /* Construct local address structure */
@@ -181,7 +181,7 @@ cipErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_closeSocket(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_closeSocket(const canSerialID_t pID) {
     (void)pID;
 
     /* Close the socket */

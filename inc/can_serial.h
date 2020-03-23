@@ -65,7 +65,7 @@ typedef int (*canSerialPutMessageFct_t)(const uint8_t, const uint32_t, const uin
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_createModule(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID);
 
 /**
  * @brief CAN over serial initialisation
@@ -74,7 +74,7 @@ cipErrorCode_t CANSerial_createModule(const canSerialID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort);
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort);
 
 /**
  * @brief CAN over serial check for initialisation
@@ -83,7 +83,7 @@ cipErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCA
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIsInitialized);
+canSerialErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIsInitialized);
 
 /**
  * @brief CAN over serial reset
@@ -92,7 +92,7 @@ cipErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIs
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pCANSerialMode);
+canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pCANSerialMode);
 
 /**
  * @brief CAN over serial stop
@@ -101,7 +101,7 @@ cipErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pC
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_stop(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID);
 
 /**
  * @brief CAN over serial restart
@@ -110,7 +110,7 @@ cipErrorCode_t CANSerial_stop(const canSerialID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_restart(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_restart(const canSerialID_t pID);
 
 /** 
  * @brief CAN over serial send
@@ -124,7 +124,7 @@ cipErrorCode_t CANSerial_restart(const canSerialID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_send(const canSerialID_t pID,
+canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
     const uint32_t pCANID,
     const uint8_t pSize,
     const uint8_t * const pData,
@@ -138,7 +138,7 @@ cipErrorCode_t CANSerial_send(const canSerialID_t pID,
  * 
  * @return error_code
  */
-cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg, ssize_t * const pReadBytes);
+canSerialErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg, ssize_t * const pReadBytes);
 
 /**
  * @brief Sets the function used to give a message to
@@ -149,7 +149,7 @@ cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID, const uint8_t pCallerID, const canSerialPutMessageFct_t pFct);
+canSerialErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID, const uint8_t pCallerID, const canSerialPutMessageFct_t pFct);
 
 /**
  * @brief Print a CAN over serial message (long format)
@@ -174,7 +174,7 @@ void CANSerial_printMessageShort(const canMessage_t * const pMsg);
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_process(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_process(const canSerialID_t pID);
 
 /**
  * @brief Starts the receiving thread.
@@ -183,7 +183,7 @@ cipErrorCode_t CANSerial_process(const canSerialID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
 
 /**
  * @brief Getter for the "Thread On" variable
@@ -193,7 +193,7 @@ cipErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
  * 
  * @return Error code
  */
-cipErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn);
+canSerialErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn);
 
 #ifdef __cplusplus
 }

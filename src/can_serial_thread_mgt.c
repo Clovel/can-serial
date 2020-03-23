@@ -29,7 +29,7 @@ static pthread_t sThread = 0;
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 /* Thread management functions ------------------------- */
-cipErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID,
+canSerialErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID,
     const uint8_t pCallerID,
     const canSerialPutMessageFct_t pFct)
 {
@@ -82,7 +82,7 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
         return;
     }
 
-    cipErrorCode_t  lErrorCode      = CAN_SERIAL_ERROR_NONE;
+    canSerialErrorCode_t  lErrorCode      = CAN_SERIAL_ERROR_NONE;
     int             lGetBufferError = 0;
     ssize_t         lReadBytes      = 0;
 
@@ -133,7 +133,7 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
     pthread_cleanup_pop(1);
 }
 
-cipErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_startRxThread> No CAN-IP module has the ID %u\n", pID);
@@ -157,7 +157,7 @@ cipErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn) {
+canSerialErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_isRxThreadOn> No CAN-IP module has the ID %u\n", pID);

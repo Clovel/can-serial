@@ -18,7 +18,7 @@
 /* Global variables ------------------------------------ */
 
 /* Socket management functions ------------------------- */
-cipErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID);
-cipErrorCode_t CANSerial_closeSocket(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_closeSocket(const canSerialID_t pID);
 
 #endif /* CAN_SERIAL_SERIAL_PORT_MGT_H */

@@ -22,7 +22,7 @@
 canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 /* CAN over serial main functions -------------------------- */
-cipErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
     if(CAN_SERIAL_MAX_NB_MODULES <= pID) {
         return CAN_SERIAL_ERROR_ARG;
     }
@@ -46,7 +46,7 @@ cipErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort) {
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_init> No CAN-IP module has the ID %u\n", pID);
@@ -86,7 +86,7 @@ cipErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCA
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIsInitialized) {
+canSerialErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIsInitialized) {
     if(NULL != pIsInitialized
         && gCANSerial[pID].instanceID == pID)
     {
@@ -99,7 +99,7 @@ cipErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIs
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pCANSerialMode) {
+canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pCANSerialMode) {
     if(!gCANSerial[pID].isInitialized) {
         /* You shouldn't "reset" a non-initialized module */
         printf("[ERROR] <CANSerial_reset> CAN-IP module %u is not initialized, cannot reset.\n", pID);
@@ -117,7 +117,7 @@ cipErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pC
     return CANSerial_init(pID, pCANSerialMode, gCANSerial[pID].canPort);
 }
 
-cipErrorCode_t CANSerial_stop(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID) {
     (void)pID; /* TODO : Multiline CAN */
 
     if(!gCANSerial[pID].isInitialized) {
@@ -130,7 +130,7 @@ cipErrorCode_t CANSerial_stop(const canSerialID_t pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_restart(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_restart(const canSerialID_t pID) {
     (void)pID; /* TODO : Multiline CAN */
 
     if(!gCANSerial[pID].isInitialized) {
@@ -143,7 +143,7 @@ cipErrorCode_t CANSerial_restart(const canSerialID_t pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_process(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_process(const canSerialID_t pID) {
     (void)pID;
 
     /* Check if the module is already initialized */
@@ -157,7 +157,7 @@ cipErrorCode_t CANSerial_process(const canSerialID_t pID) {
         return CAN_SERIAL_ERROR_CONFIG;
     }
 
-    cipErrorCode_t lErrorCode = CAN_SERIAL_ERROR_NONE;
+    canSerialErrorCode_t lErrorCode = CAN_SERIAL_ERROR_NONE;
 
     if(!gCANSerial[pID].rxThreadOn) {
         /* Start reception thread */
