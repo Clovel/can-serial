@@ -61,11 +61,11 @@ typedef int (*canSerialPutMessageFct_t)(const uint8_t, const uint32_t, const uin
 /**
  * @brief CAN over serial module creation
  * 
- * @param[in]   pID     ID of the driver used.
+ * @param[out]  pID     ID of the driver created.
  * 
  * @return Error code
  */
-canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID);
 
 /**
  * @brief CAN over serial initialisation

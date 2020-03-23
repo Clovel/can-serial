@@ -22,13 +22,9 @@
 canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 /* CAN over serial main functions -------------------------- */
-canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
-    if(CAN_SERIAL_MAX_NB_MODULES <= pID) {
-        return CAN_SERIAL_ERROR_ARG;
-    }
-
-    /* check if the module already exists */
-    if(CANSerial_moduleExists(pID)) {
+canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID) {
+    if(NULL == pID) {
+        printf("[ERROR] <CANSerial_createModule> ID ptr is NULL\n");
         return CAN_SERIAL_ERROR_ARG;
     }
 
@@ -36,11 +32,10 @@ canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
     for(uint8_t i = 0U; i < CAN_SERIAL_MAX_NB_MODULES; i++) {
         if(!gCANSerial[i].isCreated) {
             /* This will be where the module lays */
-            gCANSerial[i].instanceID = pID;
+            *pID = i;
+            gCANSerial[i].instanceID = i;
         }
     }
-
-    /* TODO */
 
     return CAN_SERIAL_ERROR_NONE;
 }
