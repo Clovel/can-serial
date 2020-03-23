@@ -115,12 +115,6 @@ static void CANSerial_rxThread(const cipID_t * const pID) {
             break;
         }
 
-        /* Check if the message is a loopback message from this instance of CANSerial */
-        if(gCANSerial.randID == lMsg.randID) {
-            /* We sent this ! Ignoring... */
-            continue;
-        }
-
         /* Get buffer to store this data */
         lGetBufferError = gCANSerial.putMessageFct(gCANSerial.callerID, lMsg.id, lMsg.size, lMsg.data, lMsg.flags);
         if(0 != lGetBufferError) {

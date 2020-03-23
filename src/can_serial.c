@@ -23,7 +23,7 @@ canSerialInternalVars_t gCANSerial;
 
 /* CAN over serial main functions -------------------------- */
 cipErrorCode_t CANSerial_createModule(const cipID_t pID) {
-    if(can_serial_MAX_NB_MODULES <= pID) {
+    if(CAN_SERIAL_MAX_NB_MODULES <= pID) {
         return can_serial_ERROR_ARG;
     }
 
@@ -60,15 +60,6 @@ cipErrorCode_t CANSerial_init(const cipID_t pID, const canSerialMode_t pCANSeria
 
     /* Set port */
     gCANSerial.canPort = pPort;
-
-    /* Generate random ID */
-    time_t lTime;
-    srand((unsigned)time(&lTime));
-    gCANSerial.randID  = (rand() & 0xFFU) << 0U;
-    gCANSerial.randID |= (rand() & 0xFFU) << 8U;
-    gCANSerial.randID |= (rand() & 0xFFU) << 16U;
-    gCANSerial.randID |= (rand() & 0xFFU) << 24U;
-    printf("[DEBUG] Generated random ID : %u\n", gCANSerial.randID);
 
     /* Initialize the socket */
     if(can_serial_ERROR_NONE != CANSerial_initCanSocket(pID)) {

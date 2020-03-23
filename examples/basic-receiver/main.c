@@ -29,13 +29,17 @@
 /* Main ------------------------------------------------ */
 /* ----------------------------------------------------- */
 int main(const int argc, const char * const * const argv) {
-    (void)argc;
-    (void)argv;
+    
+    if(argc != 2) {
+        printf("[ERROR] Wrorng argument, please give serial port as argument.\n");
+        exit(EXIT_FAILURE);
+    }
 
     unsigned int lErrorCode = 0U;
+    const char *lPort = argv + 1U;
 
     /* Initialize the CAN over serial module */
-    if(1U != (lErrorCode = CANSerial_init(0U, can_serial_MODE_NORMAL, 15024))) {
+    if(1U != (lErrorCode = CANSerial_init(0U, can_serial_MODE_NORMAL, lPort))) {
         printf("[ERROR] CANSerial_init failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }

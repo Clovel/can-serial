@@ -22,12 +22,19 @@ extern "C" {
 /* Defines --------------------------------------------- */
 #define CAN_MESSAGE_MAX_SIZE 8U
 
-/* Define this beforehand if you want 
+/** @brief Define this beforehand if you want 
  * several CAN over serial modules. 
  */
 #ifndef CAN_SERIAL_MAX_NB_MODULES
 #define CAN_SERIAL_MAX_NB_MODULES 1U
 #endif /* CAN_SERIAL_MAX_NB_MODULES */
+
+/** @brief This defines the max length of the Serial port
+ * path length.
+ */
+#ifndef CAN_SERIAL_MAX_PORT_LEN
+#define CAN_SERIAL_MAX_PORT_LEN 1U
+#endif /* CAN_SERIAL_MAX_PORT_LEN */
 
 /* Type definitions ------------------------------------ */
 typedef struct _cipMessage {
@@ -48,7 +55,7 @@ typedef enum _modes {
 typedef canSerialMode_t canMode_t;
 
 typedef uint8_t cipID_t;
-typedef int cipPort_t;
+typedef char *cipPort_t;
 
 typedef int (*cipPutMessageFct_t)(const uint8_t, const uint32_t, const uint8_t, const uint8_t * const, const uint32_t);
 

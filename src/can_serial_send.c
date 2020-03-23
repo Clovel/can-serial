@@ -57,9 +57,6 @@ cipErrorCode_t CANSerial_send(const cipID_t pID,
     for(uint8_t i = 0U; (i < lMsg.size) && (i < CAN_MESSAGE_MAX_SIZE) && (NULL != pData); i++) {
         lMsg.data[i] = pData[i];
     }
-    
-    /* Set the random ID in the message */
-    lMsg.randID = gCANSerial.randID;
 
     ssize_t lSentBytes = 0;
 
