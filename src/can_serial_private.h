@@ -19,7 +19,7 @@
 /* Defines --------------------------------------------- */
 
 /* Type definitions ------------------------------------ */
-typedef int cipSocket_t;
+typedef int canSerialPortFd_t;
 
 typedef struct _cipInternalVariables {
     uint8_t         instanceID;
@@ -28,7 +28,7 @@ typedef struct _cipInternalVariables {
     bool            isStopped;
 
     /* Socket */
-    cipSocket_t         canSocket; /* The socket used to communicate CAN frames */
+    canSerialPortFd_t         canSocket; /* The socket used to communicate CAN frames */
     struct sockaddr_in  socketInAddress;
     char               *canIP;      /* IP Address */
     canSerialPort_t           canPort;    /* Server port number */
