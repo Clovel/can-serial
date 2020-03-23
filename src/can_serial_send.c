@@ -28,7 +28,7 @@
 extern canSerialInternalVars_t gCANSerial;
 
 
-cipErrorCode_t CANSerial_send(const cipID_t pID,
+cipErrorCode_t CANSerial_send(const canSerialID_t pID,
     const uint32_t pCANID,
     const uint8_t pSize,
     const uint8_t * const pData,
@@ -39,17 +39,17 @@ cipErrorCode_t CANSerial_send(const cipID_t pID,
     /* Check the ID */
     if(pID != gCANSerial.instanceID) {
         printf("[ERROR] <CANSerial_send> No CAN-IP module has the ID %u\n", pID);
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
     if(!gCANSerial.isInitialized) {
         printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial.instanceID);
-        return can_serial_ERROR_NOT_INIT;
+        return CAN_SERIAL_ERROR_NOT_INIT;
     }
 
     /* Build CANSerial message */
-    cipMessage_t lMsg;
+    canMessage_t lMsg;
     memset(lMsg.data, 0, CAN_MESSAGE_MAX_SIZE);
     lMsg.id    = pCANID;
     lMsg.size  = pSize;
@@ -61,17 +61,17 @@ cipErrorCode_t CANSerial_send(const cipID_t pID,
     ssize_t lSentBytes = 0;
 
     errno = 0;
-    lSentBytes = sendto(gCANSerial.canSocket, (const void *)&lMsg, sizeof(cipMessage_t), 0, 
+    lSentBytes = sendto(gCANSerial.canSocket, (const void *)&lMsg, sizeof(canMessage_t), 0, 
         (const struct sockaddr *)&gCANSerial.socketInAddress, sizeof(gCANSerial.socketInAddress));
-    if(sizeof(cipMessage_t) != lSentBytes) {
+    if(sizeof(canMessage_t) != lSentBytes) {
         printf("[ERROR] <CANSerial_send> sendto failed !\n");
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     pthread_mutex_unlock(&gCANSerial.mutex);
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }

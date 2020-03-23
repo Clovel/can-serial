@@ -36,16 +36,16 @@ int main(const int argc, const char * const * const argv) {
     }
 
     unsigned int lErrorCode = 0U;
-    const char *lPort = argv + 1U;
+    const char *lPort = *(argv + 1U);
 
     /* Initialize the CAN over serial module */
-    if(1U != (lErrorCode = CANSerial_init(0U, can_serial_MODE_NORMAL, lPort))) {
+    if(1U != (lErrorCode = CANSerial_init(0U, CAN_SERIAL_MODE_NORMAL, lPort))) {
         printf("[ERROR] CANSerial_init failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
 
     /* Set up CAN message */
-    cipMessage_t lMsg = {
+    canMessage_t lMsg = {
         0x701U,
         8U,
         {
@@ -65,14 +65,14 @@ int main(const int argc, const char * const * const argv) {
     ssize_t lReadBytes = 0;
 
     /* Receive the CAN message over IP */
-    while(lErrorCode == can_serial_ERROR_NONE) {
+    while(lErrorCode == CAN_SERIAL_ERROR_NONE) {
         lErrorCode = CANSerial_recv(0U, &lMsg, &lReadBytes);
-        if(0 < lReadBytes && sizeof(cipMessage_t) == lReadBytes) {
+        if(0 < lReadBytes && sizeof(canMessage_t) == lReadBytes) {
             CANSerial_printMessageShort(&lMsg);
         }
     }
 
-    if(can_serial_ERROR_NONE != lErrorCode) {
+    if(CAN_SERIAL_ERROR_NONE != lErrorCode) {
         printf("[ERROR] CANSerial_recv failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }

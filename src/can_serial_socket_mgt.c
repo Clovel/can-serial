@@ -49,7 +49,7 @@ static cipErrorCode_t listNetItfs(void) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
 
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     struct ifaddrs *lTmpIfAddr = lIfAddrs;
@@ -66,10 +66,10 @@ static cipErrorCode_t listNetItfs(void) {
 
     freeifaddrs(lIfAddrs);
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
+cipErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
     (void) pID;
 
     /* Construct local address structure */
@@ -89,7 +89,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
 
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     /* set socket options */
@@ -102,7 +102,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     /* Set the address to be reusable */
@@ -112,7 +112,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     /* Set the port to be reusable */
@@ -121,7 +121,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     /* Set the socket as non-blocking */
@@ -131,7 +131,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     lFlags |= O_NONBLOCK;
@@ -140,7 +140,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     /* Get socket information */
@@ -153,14 +153,14 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
     // char lPortStr[16U] = "";
     // if(0 > snprintf(lPortStr, 16U, "%d", gCANSerial.canPort)) {
     //     printf("[ERROR] <CANSerial_initcanSocket> snprintf for port failed !\n");
-    //     return can_serial_ERROR_SYS;
+    //     return CAN_SERIAL_ERROR_SYS;
     // }
 
     // int lFctReturn = getaddrinfo(gCANSerial.canIP, lPortStr, &lHints, &gCANSerial.addrinfo);
     // if(0 != lFctReturn || NULL == gCANSerial.addrinfo) {
     //     printf("[ERROR] <CANSerial_initcanSocket> getaddrinfo failed !\n");
     //     printf("        Invalid address (%s) or port (%d)\n", gCANSerial.canIP, gCANSerial.canPort);
-    //     return can_serial_ERROR_NET;
+    //     return CAN_SERIAL_ERROR_NET;
     // }
 
     /* Bind socket for reception */
@@ -170,7 +170,7 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
     /* Set the sockInAddress to the specified broadcast address for sending */
@@ -178,10 +178,10 @@ cipErrorCode_t CANSerial_initCanSocket(const cipID_t pID) {
     //printf("[DEBUG] socketInAddress.sin_addr.s_addr = %ld\n", gCANSerial.socketInAddress.sin_addr.s_addr);
 
     /* Socket initialized */
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_closeSocket(const cipID_t pID) {
+cipErrorCode_t CANSerial_closeSocket(const canSerialID_t pID) {
     (void)pID;
 
     /* Close the socket */
@@ -191,8 +191,8 @@ cipErrorCode_t CANSerial_closeSocket(const cipID_t pID) {
         if(0 != errno) {
             printf("        errno = %d (%s)\n", errno, strerror(errno));
         }
-        return can_serial_ERROR_NET;
+        return CAN_SERIAL_ERROR_NET;
     }
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }

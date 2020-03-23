@@ -29,29 +29,29 @@
 /* Extern variables ------------------------------------ */
 extern canSerialInternalVars_t gCANSerial;
 
-cipErrorCode_t CANSerial_recv(const cipID_t pID, cipMessage_t * const pMsg, ssize_t * const pReadBytes) {
+cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg, ssize_t * const pReadBytes) {
     pthread_mutex_lock(&gCANSerial.mutex);
     
     /* Check the ID */
     if(pID != gCANSerial.instanceID) {
         printf("[ERROR] <CANSerial_recv> No CAN-IP module has the ID %u\n", pID);
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
     if(!gCANSerial.isInitialized) {
         printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial.instanceID);
-        return can_serial_ERROR_NOT_INIT;
+        return CAN_SERIAL_ERROR_NOT_INIT;
     }
 
     if(NULL == pMsg) {
         printf("[ERROR] <CANSerial_rxThread> Message is NULL\n");
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     if(NULL == pReadBytes) {
         printf("[ERROR] <CANSerial_rxThread> pReadBytes output pointer is NULL\n");
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     *pReadBytes = 0;
@@ -60,16 +60,16 @@ cipErrorCode_t CANSerial_recv(const cipID_t pID, cipMessage_t * const pMsg, ssiz
     //char lSrcIPAddr[INET_ADDRSTRLEN] = "";
     
     /* Receive the CAN frame */
-    *pReadBytes = recvfrom(gCANSerial.canSocket, (void *)pMsg, sizeof(cipMessage_t), 0, 
+    *pReadBytes = recvfrom(gCANSerial.canSocket, (void *)pMsg, sizeof(canMessage_t), 0, 
         (struct sockaddr *)&lSrcAddr, &lSrcAddrLen);
-    //*pReadBytes = recv(gCANSerial.canSocket, (void *)pMsg, sizeof(cipMessage_t), 0);
+    //*pReadBytes = recv(gCANSerial.canSocket, (void *)pMsg, sizeof(canMessage_t), 0);
     if(0 > *pReadBytes) {
         if(EAGAIN != errno && EWOULDBLOCK != errno) {
             printf("[ERROR] <CANSerial_send> recvfrom failed !\n");
             if(0 != errno) {
                 printf("        errno = %d (%s)\n", errno, strerror(errno));
             }
-            return can_serial_ERROR_NET;
+            return CAN_SERIAL_ERROR_NET;
         } else {
             /* Nothing to read on the socket */
         }
@@ -84,5 +84,5 @@ cipErrorCode_t CANSerial_recv(const cipID_t pID, cipMessage_t * const pMsg, ssiz
 
     pthread_mutex_unlock(&gCANSerial.mutex);
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }

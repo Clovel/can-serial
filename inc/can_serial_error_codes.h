@@ -13,15 +13,15 @@
 
 /* Type definitions ------------------------------------ */
 typedef enum _cipErrorCodes {
-    can_serial_ERROR_UNKNOWN      = 0U,
-    can_serial_ERROR_NONE         = 1,
-    can_serial_ERROR_ARG          = 2,
-    can_serial_ERROR_SYS          = 3,
-    can_serial_ERROR_NET          = 4,
-    can_serial_ERROR_ALREADY_INIT = 5,
-    can_serial_ERROR_NOT_INIT     = 6,
-    can_serial_ERROR_STOPPED      = 7,
-    can_serial_ERROR_CONFIG       = 8
+    CAN_SERIAL_ERROR_UNKNOWN      = 0U,
+    CAN_SERIAL_ERROR_NONE         = 1,
+    CAN_SERIAL_ERROR_ARG          = 2,
+    CAN_SERIAL_ERROR_SYS          = 3,
+    CAN_SERIAL_ERROR_NET          = 4,
+    CAN_SERIAL_ERROR_ALREADY_INIT = 5,
+    CAN_SERIAL_ERROR_NOT_INIT     = 6,
+    CAN_SERIAL_ERROR_STOPPED      = 7,
+    CAN_SERIAL_ERROR_CONFIG       = 8
 } cipErrorCode_t;
 
 #endif /* CAN_SERIAL_ERROR_CODES_H */

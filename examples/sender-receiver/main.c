@@ -23,7 +23,7 @@
 /* Type definitions ------------------------------------ */
 
 
-extern void CANSerial_printMessageShort(const cipMessage_t * const pMsg);
+extern void CANSerial_printMessageShort(const canMessage_t * const pMsg);
 
 /* Support functions ----------------------------------- */
 int inputMessage(const uint8_t pID, 
@@ -35,7 +35,7 @@ int inputMessage(const uint8_t pID,
     (void)pID;
 
     /* Set up CAN message */
-    cipMessage_t lMsg;
+    canMessage_t lMsg;
     lMsg.id = pCOBID;
     lMsg.size = pSize;
     lMsg.flags = pFlags;
@@ -59,10 +59,10 @@ int main(const int argc, const char * const * const argv) {
     }
 
     unsigned int lErrorCode = 0U;
-    const char *lPort = argv + 1U;
+    const char *lPort = *(argv + 1U);
 
     /* Initialize the CAN over serial module */
-    if(1U != (lErrorCode = CANSerial_init(0U, can_serial_MODE_NORMAL, lPort))) {
+    if(1U != (lErrorCode = CANSerial_init(0U, CAN_SERIAL_MODE_NORMAL, lPort))) {
         printf("[ERROR] CANSerial_init failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
@@ -73,7 +73,7 @@ int main(const int argc, const char * const * const argv) {
     }
 
     /* Set up CAN message */
-    cipMessage_t lMsg = {
+    canMessage_t lMsg = {
         0x701U,
         8U,
         {
@@ -86,7 +86,6 @@ int main(const int argc, const char * const * const argv) {
             0xCDU,
             0xEFU
         },
-        0x00000000U,
         0x00000000U
     };
 
@@ -98,7 +97,7 @@ int main(const int argc, const char * const * const argv) {
     ssize_t lReadBytes = 0;
 
     /* Receive the CAN message over IP */
-    while(lErrorCode == can_serial_ERROR_NONE && 0 >= lReadBytes) {
+    while(lErrorCode == CAN_SERIAL_ERROR_NONE && 0 >= lReadBytes) {
         if(1U != (lErrorCode = CANSerial_send(0U, lMsg.id, lMsg.size, lMsg.data, lMsg.flags))) {
             printf("[ERROR] CANSerial_send failed w/ error code %u.\n", lErrorCode);
             exit(EXIT_FAILURE);
@@ -107,7 +106,7 @@ int main(const int argc, const char * const * const argv) {
         sleep(1U);
     }
 
-    if(can_serial_ERROR_NONE != lErrorCode) {
+    if(CAN_SERIAL_ERROR_NONE != lErrorCode) {
         printf("[ERROR] sender-receiver failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }

@@ -29,25 +29,25 @@ static pthread_t sThread = 0;
 extern canSerialInternalVars_t gCANSerial;
 
 /* Thread management functions ------------------------- */
-cipErrorCode_t CANSerial_setPutMessageFunction(const cipID_t pID,
+cipErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID,
     const uint8_t pCallerID,
     const cipPutMessageFct_t pFct)
 {
     /* Check the ID */
     if(pID != gCANSerial.instanceID) {
         printf("[ERROR] <CANSerial_setPutMessageFunction> No CAN-IP module has the ID %u\n", pID);
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     if(NULL == pFct) {
         printf("[ERROR] <CANSerial_setPutMessageFunction> Function ptr arg is NULL !\n");
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     gCANSerial.callerID      = pCallerID;
     gCANSerial.putMessageFct = pFct;
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }
 
 static void CANSerial_rxThreadCleanup(void *pPtr) {
@@ -55,7 +55,7 @@ static void CANSerial_rxThreadCleanup(void *pPtr) {
     gCANSerial.rxThreadOn = false;
 }
 
-static void CANSerial_rxThread(const cipID_t * const pID) {
+static void CANSerial_rxThread(const canSerialID_t * const pID) {
     /* Check if the parameter is NULL */
     if(NULL == pID) {
         printf("[ERROR] <CANSerial_rxThread> ID ptr is NULL !\n");
@@ -63,7 +63,7 @@ static void CANSerial_rxThread(const cipID_t * const pID) {
     }
 
     /* Save the parameter before it is destroyed by the tread creator */
-    const cipID_t lID = *pID;
+    const canSerialID_t lID = *pID;
 
     /* Check the ID */
     if(lID != gCANSerial.instanceID) {
@@ -82,7 +82,7 @@ static void CANSerial_rxThread(const cipID_t * const pID) {
         return;
     }
 
-    cipErrorCode_t  lErrorCode      = can_serial_ERROR_NONE;
+    cipErrorCode_t  lErrorCode      = CAN_SERIAL_ERROR_NONE;
     int             lGetBufferError = 0;
     ssize_t         lReadBytes      = 0;
 
@@ -93,24 +93,24 @@ static void CANSerial_rxThread(const cipID_t * const pID) {
 
     /* Infinite Rx loop */
     printf("[DEBUG] <CANSerial_rxThread> Starting RX thread.\n");
-    while (can_serial_ERROR_NONE == lErrorCode) {
+    while (CAN_SERIAL_ERROR_NONE == lErrorCode) {
         /* Initialize a CANSerial message */
-        cipMessage_t lMsg;
-        memset(&lMsg, 0, sizeof(cipMessage_t));
+        canMessage_t lMsg;
+        memset(&lMsg, 0, sizeof(canMessage_t));
         
         /* Reading a CAN message */
         lErrorCode = CANSerial_recv(lID, &lMsg, &lReadBytes);
-        if(can_serial_ERROR_NONE != lErrorCode) {
+        if(CAN_SERIAL_ERROR_NONE != lErrorCode) {
             printf("[ERROR] <CANSerial_rxThread> CANSerial_recv failed w/ error code %u\n", lErrorCode);
             break;
         }
 
-        if(can_serial_ERROR_NONE == lErrorCode && 0 > lReadBytes) {
+        if(CAN_SERIAL_ERROR_NONE == lErrorCode && 0 > lReadBytes) {
             /* Nothing read, the socket is non-blocking */
             continue;
         }
         
-        if(sizeof(cipMessage_t) != lReadBytes) {
+        if(sizeof(canMessage_t) != lReadBytes) {
             printf("[ERROR] <CANSerial_rxThread> CANSerial_recv received inconsistent data of size %d\n", lReadBytes);
             break;
         }
@@ -133,44 +133,44 @@ static void CANSerial_rxThread(const cipID_t * const pID) {
     pthread_cleanup_pop(1);
 }
 
-cipErrorCode_t CANSerial_startRxThread(const cipID_t pID) {
+cipErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
     /* Check the ID */
     if(pID != gCANSerial.instanceID) {
         printf("[ERROR] <CANSerial_startRxThread> No CAN-IP module has the ID %u\n", pID);
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     if(NULL == gCANSerial.putMessageFct) {
         printf("[ERROR] <CANSerial_startRxThread> Message buffer getter function is NULL.\n");
-        return can_serial_ERROR_CONFIG;
+        return CAN_SERIAL_ERROR_CONFIG;
     }
 
     int lSysResult = 0;
     lSysResult = pthread_create(&sThread, NULL, (void * (*)(void *))CANSerial_rxThread, (void *)&pID);
     if (0 < lSysResult) {
         printf("[ERROR] <CANSerial_startRxThread> Thread creation failed\n");
-        return can_serial_ERROR_SYS;
+        return CAN_SERIAL_ERROR_SYS;
     } else {
         printf("[INFO ] <CANSerial_startRxThread> Thread creation successful\n");
     }
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }
 
-cipErrorCode_t CANSerial_isRxThreadOn(const cipID_t pID, bool * const pOn) {
+cipErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn) {
     /* Check the ID */
     if(pID != gCANSerial.instanceID) {
         printf("[ERROR] <CANSerial_isRxThreadOn> No CAN-IP module has the ID %u\n", pID);
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Check argument ptr */
     if(NULL == pOn) {
         printf("[ERROR] <CANSerial_isRxThreadOn> Parameter ptr is NULL !\n");
-        return can_serial_ERROR_ARG;
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     *pOn = gCANSerial.rxThreadOn;
 
-    return can_serial_ERROR_NONE;
+    return CAN_SERIAL_ERROR_NONE;
 }

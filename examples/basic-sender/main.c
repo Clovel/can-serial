@@ -35,16 +35,16 @@ int main(const int argc, const char * const * const argv) {
     }
 
     unsigned int lErrorCode = 0U;
-    const char *lPort = argv + 1U;
+    const char *lPort = *(argv + 1U);
 
     /* Initialize the CAN over serial module */
-    if(1U != (lErrorCode = CANSerial_init(0U, can_serial_MODE_NORMAL, lPort))) {
+    if(1U != (lErrorCode = CANSerial_init(0U, CAN_SERIAL_MODE_NORMAL, lPort))) {
         printf("[ERROR] CANSerial_init failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
 
     /* Set up CAN message */
-    const cipMessage_t lMsg = {
+    const canMessage_t lMsg = {
         0x701U,
         8U,
         {
@@ -62,7 +62,7 @@ int main(const int argc, const char * const * const argv) {
     };
     
     /* Send the CAN message over IP */
-    while(can_serial_ERROR_NONE == lErrorCode) {
+    while(CAN_SERIAL_ERROR_NONE == lErrorCode) {
         if(1U != (lErrorCode = CANSerial_send(0U, lMsg.id, lMsg.size, lMsg.data, lMsg.flags))) {
             printf("[ERROR] CANSerial_send failed w/ error code %u.\n", lErrorCode);
             exit(EXIT_FAILURE);
