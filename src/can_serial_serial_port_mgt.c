@@ -35,7 +35,7 @@ canSerialErrorCode_t CANSerial_initSerialPort(const canSerialID_t pID) {
     //
 }
 
-canSerialErrorCode_t CANSerial_closeSocket(const canSerialID_t pID) {
+canSerialErrorCode_t CANSerial_closeSerialPort(const canSerialID_t pID) {
     (void)pID;
 
     /* Close the socket */

@@ -70,8 +70,8 @@ canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode
     gCANSerial[pID].serialPort = pPort;
 
     /* Initialize the socket */
-    if(CAN_SERIAL_ERROR_NONE != CANSerial_initCanSocket(pID)) {
-        printf("[ERROR] <CANSerial_init> Failed to initialize socket w/ CANSerial_initCanSocket\n");
+    if(CAN_SERIAL_ERROR_NONE != CANSerial_initSerialPort(pID)) {
+        printf("[ERROR] <CANSerial_init> Failed to initialize socket w/ CANSerial_initSerialPort\n");
         return CAN_SERIAL_ERROR_NET;
     }
 
@@ -109,7 +109,7 @@ canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMod
     gCANSerial[pID].isInitialized = false;
 
     /* Close the socket */
-    if(CAN_SERIAL_ERROR_NONE != CANSerial_closeSocket(pID)) {
+    if(CAN_SERIAL_ERROR_NONE != CANSerial_closeSerialPort(pID)) {
         return CAN_SERIAL_ERROR_NET;
     }
 

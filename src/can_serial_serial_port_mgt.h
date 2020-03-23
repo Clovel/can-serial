@@ -19,6 +19,6 @@
 
 /* Socket management functions ------------------------- */
 canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID);
-canSerialErrorCode_t CANSerial_closeSocket(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_closeSerialPort(const canSerialID_t pID);
 
 #endif /* CAN_SERIAL_SERIAL_PORT_MGT_H */
