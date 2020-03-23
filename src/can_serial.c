@@ -41,6 +41,11 @@ canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID) {
 }
 
 canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pMode, const char * pPort) {
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_init> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
+
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_init> No CANSerial module has the ID %u\n", pID);
@@ -82,7 +87,7 @@ canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode
 
 canSerialErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * const pIsInitialized) {
     if(NULL != pIsInitialized
-        && gCANSerial[pID].instanceID == pID)
+        && CANSerial_moduleExists(pID))
     {
         *pIsInitialized = gCANSerial[pID].isInitialized;
     } else {
@@ -94,6 +99,11 @@ canSerialErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * con
 }
 
 canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pMode) {
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_reset> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
+
     if(!gCANSerial[pID].isInitialized) {
         /* You shouldn't "reset" a non-initialized module */
         printf("[ERROR] <CANSerial_reset> CANSerial module %u is not initialized, cannot reset.\n", pID);
@@ -112,7 +122,10 @@ canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMod
 }
 
 canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID) {
-    (void)pID; /* TODO : Multiline CAN */
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_stop> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
 
     if(!gCANSerial[pID].isInitialized) {
         printf("[ERROR] <CANSerial_stop> CANSerial module %u is not initialized, cannot stop it.\n", pID);
@@ -125,7 +138,10 @@ canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID) {
 }
 
 canSerialErrorCode_t CANSerial_restart(const canSerialID_t pID) {
-    (void)pID; /* TODO : Multiline CAN */
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_restart> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
 
     if(!gCANSerial[pID].isInitialized) {
         printf("[ERROR] <CANSerial_restart> CANSerial module %u is not initialized, cannot restart it.\n", pID);
@@ -138,16 +154,19 @@ canSerialErrorCode_t CANSerial_restart(const canSerialID_t pID) {
 }
 
 canSerialErrorCode_t CANSerial_process(const canSerialID_t pID) {
-    (void)pID;
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_process> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
 
     /* Check if the module is already initialized */
     if(!gCANSerial[pID].isInitialized) {
-        printf("[ERROR] <CANSerial_rxThread> CANSerial module %u is not initialized.\n", gCANSerial[pID].instanceID);
+        printf("[ERROR] <CANSerial_process> CANSerial module %u is not initialized.\n", gCANSerial[pID].instanceID);
         return CAN_SERIAL_ERROR_NOT_INIT;
     }
 
     if(NULL == gCANSerial[pID].putMessageFct) {
-        printf("[ERROR] <CANSerial_rxThread> Message buffer getter function is NULL.\n");
+        printf("[ERROR] <CANSerial_process> Message buffer getter function is NULL.\n");
         return CAN_SERIAL_ERROR_CONFIG;
     }
 
@@ -157,7 +176,7 @@ canSerialErrorCode_t CANSerial_process(const canSerialID_t pID) {
         /* Start reception thread */
         lErrorCode = CANSerial_startRxThread(pID);
         if(CAN_SERIAL_ERROR_NONE != lErrorCode) {
-            printf("[ERROR] <CANSerial_rxThread> CANSerial_startRxThread failed w/ error code %u\n", lErrorCode);
+            printf("[ERROR] <CANSerial_process> CANSerial_startRxThread failed w/ error code %u\n", lErrorCode);
             return CAN_SERIAL_ERROR_SYS;
         }
     }

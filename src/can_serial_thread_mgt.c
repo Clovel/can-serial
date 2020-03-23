@@ -32,6 +32,11 @@ canSerialErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID,
     const uint8_t pCallerID,
     const canSerialPutMessageFct_t pFct)
 {
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_setPutMessageFunction> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
+
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_setPutMessageFunction> No CANSerial module has the ID %u\n", pID);
@@ -65,8 +70,8 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
     const canSerialID_t lID = *pID;
 
     /* Check the ID */
-    if(lID != gCANSerial[lID].instanceID) {
-        printf("[ERROR] <CANSerial_rxThread> No CANSerial module has the ID %u\n", lID);
+    if(!CANSerial_moduleExists(*pID)) {
+        printf("[ERROR] <CANSerial_rxThread> No CANSerial module has the ID %u.\n", *pID);
         return;
     }
 
@@ -134,8 +139,8 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
 
 canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
     /* Check the ID */
-    if(pID != gCANSerial[pID].instanceID) {
-        printf("[ERROR] <CANSerial_startRxThread> No CANSerial module has the ID %u\n", pID);
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_startRxThread> No CANSerial module has the ID %u.\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 
@@ -158,8 +163,8 @@ canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
 
 canSerialErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn) {
     /* Check the ID */
-    if(pID != gCANSerial[pID].instanceID) {
-        printf("[ERROR] <CANSerial_isRxThreadOn> No CANSerial module has the ID %u\n", pID);
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_isRxThreadOn> No CANSerial module has the ID %u.\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 

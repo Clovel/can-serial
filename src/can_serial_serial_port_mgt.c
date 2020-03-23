@@ -63,6 +63,11 @@ canSerialErrorCode_t CANSerial_initSerialPort(const canSerialID_t pID) {
 }
 
 canSerialErrorCode_t CANSerial_closeSerialPort(const canSerialID_t pID) {
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_closeSerialPort> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
+
     /* Close the socket */
     errno = 0;
     if(0 > close(gCANSerial[pID].fd)) {
