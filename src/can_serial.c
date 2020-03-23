@@ -40,7 +40,7 @@ canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const canSerialPort_t pPort) {
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const char * pPort) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_init> No CANSerial module has the ID %u\n", pID);

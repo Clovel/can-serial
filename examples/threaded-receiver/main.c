@@ -1,21 +1,22 @@
 /**
- * @brief CAN over serial sender receiver example
+ * @brief CAN over serial threaded receiver example
  * 
  * @file main.c
  */
 
 /* Includes -------------------------------------------- */
+/* CANSerial */
 #include "can_serial.h"
 #include "can_serial_error_codes.h"
 
+/* C System */
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 
 /* Defines --------------------------------------------- */
-#define SENDER_RECEIVER_ID 0U
+#define THREADED_RECEIVER_ID 0U
 
 /* Notes ----------------------------------------------- */
 
@@ -54,13 +55,14 @@ int inputMessage(const uint8_t pID,
 /* Main ------------------------------------------------ */
 /* ----------------------------------------------------- */
 int main(const int argc, const char * const * const argv) {
+    
     if(argc != 2) {
         printf("[ERROR] Wrorng argument, please give serial port as argument.\n");
         exit(EXIT_FAILURE);
     }
 
     unsigned int lErrorCode = 0U;
-    const char *lPort = *(const char *)(argv + 1U);
+    const char *lPort = (const char *)(argv + 1U);
 
     /* Create a CANSerial module */
     uint8_t lID = 0U;
@@ -75,51 +77,23 @@ int main(const int argc, const char * const * const argv) {
         exit(EXIT_FAILURE);
     }
 
-    if(1U != (lErrorCode = CANSerial_setPutMessageFunction(lID, SENDER_RECEIVER_ID, inputMessage))) {
+    if(1U != (lErrorCode = CANSerial_setPutMessageFunction(lID, THREADED_RECEIVER_ID, inputMessage))) {
         printf("[ERROR] CANSerial_setPutMessageFunction failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
-
-    /* Set up CAN message */
-    canMessage_t lMsg = {
-        0x701U,
-        8U,
-        {
-            0x01U,
-            0x23U,
-            0x45U,
-            0x67U,
-            0x89U,
-            0xABU,
-            0xCDU,
-            0xEFU
-        },
-        0x00000000U
-    };
 
     if(1U != (lErrorCode = CANSerial_startRxThread(lID))) {
         printf("[ERROR] CANSerial_startRxThread failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
 
-    ssize_t lReadBytes = 0;
-
-    /* Send the CAN message over Serial */
-    while(lErrorCode == CAN_SERIAL_ERROR_NONE && 0 >= lReadBytes) {
-        if(1U != (lErrorCode = CANSerial_send(lID, lMsg.id, lMsg.size, lMsg.data, lMsg.flags))) {
-            printf("[ERROR] CANSerial_send failed w/ error code %u.\n", lErrorCode);
-            exit(EXIT_FAILURE);
-        }
-
-        sleep(1U);
-    }
+    /* Receive the CAN message over Serial */
+    while(true);
 
     if(CAN_SERIAL_ERROR_NONE != lErrorCode) {
-        printf("[ERROR] sender-receiver failed w/ error code %u.\n", lErrorCode);
+        printf("[ERROR] CANSerial_recv failed w/ error code %u.\n", lErrorCode);
         exit(EXIT_FAILURE);
     }
-
-    CANSerial_printMessage(&lMsg);
 
     return EXIT_SUCCESS;
 }

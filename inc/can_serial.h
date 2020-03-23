@@ -53,7 +53,6 @@ typedef enum _modes {
 typedef canSerialMode_t canMode_t;
 
 typedef uint8_t canSerialID_t;
-typedef char *canSerialPort_t;
 
 typedef int (*canSerialPutMessageFct_t)(const uint8_t, const uint32_t, const uint8_t, const uint8_t * const, const uint32_t);
 
@@ -74,7 +73,7 @@ canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID);
  * 
  * @return Error code
  */
-canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const canSerialPort_t pPort);
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const char * pPort);
 
 /**
  * @brief CAN over serial check for initialisation

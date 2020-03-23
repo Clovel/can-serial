@@ -30,7 +30,7 @@ typedef struct _canSerialInternalVars {
 
     /* Socket */
     canSerialPortFd_t   fd;  /* The file descriptor used to communicate CAN frames */
-    canSerialPort_t     serialPort; /* Serial port */
+    char *     serialPort; /* Serial port */
 
     /* Rx Thread */
     pthread_t thread;
