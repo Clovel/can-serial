@@ -24,7 +24,6 @@
 /* Global variables ------------------------------------ */
 
 /* Static variables ------------------------------------ */
-// static const socklen_t sAddrLen = sizeof(struct sockaddr);
 
 /* Extern variables ------------------------------------ */
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
@@ -55,32 +54,9 @@ canSerialErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * cons
     }
 
     *pReadBytes = 0;
-    struct sockaddr_in lSrcAddr;
-    socklen_t lSrcAddrLen = sizeof(lSrcAddr);
-    //char lSrcIPAddr[INET_ADDRSTRLEN] = "";
     
     /* Receive the CAN frame */
-    *pReadBytes = recvfrom(gCANSerial[pID].canSocket, (void *)pMsg, sizeof(canMessage_t), 0, 
-        (struct sockaddr *)&lSrcAddr, &lSrcAddrLen);
-    //*pReadBytes = recv(gCANSerial[pID].canSocket, (void *)pMsg, sizeof(canMessage_t), 0);
-    if(0 > *pReadBytes) {
-        if(EAGAIN != errno && EWOULDBLOCK != errno) {
-            printf("[ERROR] <CANSerial_send> recvfrom failed !\n");
-            if(0 != errno) {
-                printf("        errno = %d (%s)\n", errno, strerror(errno));
-            }
-            return CAN_SERIAL_ERROR_NET;
-        } else {
-            /* Nothing to read on the socket */
-        }
-    } else if (0 == *pReadBytes) {
-        /* Nothing was read from the socket */
-    } else {
-        /* We got our message */
-        
-        // inet_ntop(PF_INET, &lSrcAddr.sin_addr, lSrcIPAddr, INET_ADDRSTRLEN);
-        // printf("[DEBUG] <CANSerial_send> Received %ld bytes from %s\n", *pReadBytes, lSrcIPAddr, lSrcAddrLen);
-    }
+    errno = 0;
 
     pthread_mutex_unlock(&gCANSerial[pID].mutex);
 
