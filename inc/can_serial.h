@@ -44,8 +44,6 @@ typedef struct _canMessage {
     uint32_t flags;
 } canMessage_t;
 
-typedef canMessage_t canMessage_t;
-
 typedef enum _modes {
     CAN_SERIAL_MODE_UNKNOWN = 0U,
     CAN_SERIAL_MODE_NORMAL  = 1U,
