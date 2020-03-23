@@ -46,7 +46,7 @@ canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const cipPort_t pPort) {
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const canSerialPort_t pPort) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_init> No CAN-IP module has the ID %u\n", pID);

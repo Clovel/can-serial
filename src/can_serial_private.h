@@ -31,7 +31,7 @@ typedef struct _cipInternalVariables {
     cipSocket_t         canSocket; /* The socket used to communicate CAN frames */
     struct sockaddr_in  socketInAddress;
     char               *canIP;      /* IP Address */
-    cipPort_t           canPort;    /* Server port number */
+    canSerialPort_t           canPort;    /* Server port number */
     struct hostent     *hostPtr;    /* Server information */
     struct addrinfo    *addrinfo;   /* Address information fetched w/ getaddrinfo */
 
