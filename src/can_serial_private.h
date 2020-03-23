@@ -33,6 +33,7 @@ typedef struct _canSerialInternalVars {
     canSerialPort_t     serialPort; /* Serial port */
 
     /* Rx Thread */
+    pthread_t thread;
     bool rxThreadOn;
     uint8_t callerID;
     canSerialPutMessageFct_t putMessageFct;

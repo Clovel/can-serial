@@ -23,7 +23,6 @@
 /* Global variables ------------------------------------ */
 
 /* Static variables ------------------------------------ */
-static pthread_t sThread = 0;
 
 /* Extern variables ------------------------------------ */
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
@@ -146,7 +145,7 @@ canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
     }
 
     int lSysResult = 0;
-    lSysResult = pthread_create(&sThread, NULL, (void * (*)(void *))CANSerial_rxThread, (void *)&pID);
+    lSysResult = pthread_create(&gCANSerial[pID].thread, NULL, (void * (*)(void *))CANSerial_rxThread, (void *)&pID);
     if (0 < lSysResult) {
         printf("[ERROR] <CANSerial_startRxThread> Thread creation failed\n");
         return CAN_SERIAL_ERROR_SYS;
