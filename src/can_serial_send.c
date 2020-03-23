@@ -61,15 +61,6 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
     ssize_t lSentBytes = 0;
 
     errno = 0;
-    lSentBytes = sendto(gCANSerial[pID].canSocket, (const void *)&lMsg, sizeof(canMessage_t), 0, 
-        (const struct sockaddr *)&gCANSerial[pID].socketInAddress, sizeof(gCANSerial[pID].socketInAddress));
-    if(sizeof(canMessage_t) != lSentBytes) {
-        printf("[ERROR] <CANSerial_send> sendto failed !\n");
-        if(0 != errno) {
-            printf("        errno = %d (%s)\n", errno, strerror(errno));
-        }
-        return CAN_SERIAL_ERROR_NET;
-    }
 
     pthread_mutex_unlock(&gCANSerial[pID].mutex);
 
