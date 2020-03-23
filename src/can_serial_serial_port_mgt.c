@@ -74,12 +74,12 @@ canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
 
     /* Construct local address structure */
     gCANSerial[pID].socketInAddress.sin_family         = PF_INET;
-    gCANSerial[pID].socketInAddress.sin_port           = htons(gCANSerial[pID].canPort);
+    gCANSerial[pID].socketInAddress.sin_port           = htons(gCANSerial[pID].serialPort);
     // gCANSerial[pID].socketInAddress.sin_addr.s_addr    = inet_addr(gCANSerial[pID].canIP);
     gCANSerial[pID].socketInAddress.sin_addr.s_addr    = INADDR_ANY; /* Set it to INADDR_ANY to bind */
 
     printf("[DEBUG] <CANSerial_initcanSocket> IPAddr = %s\n", gCANSerial[pID].canIP);
-    printf("[DEBUG] <CANSerial_initcanSocket> Port   = %d\n", gCANSerial[pID].canPort);
+    printf("[DEBUG] <CANSerial_initcanSocket> Port   = %d\n", gCANSerial[pID].serialPort);
     
     /* Create the UDP socket (DGRAM for UDP */
     errno = 0;
@@ -151,7 +151,7 @@ canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
     // };
 
     // char lPortStr[16U] = "";
-    // if(0 > snprintf(lPortStr, 16U, "%d", gCANSerial[pID].canPort)) {
+    // if(0 > snprintf(lPortStr, 16U, "%d", gCANSerial[pID].serialPort)) {
     //     printf("[ERROR] <CANSerial_initcanSocket> snprintf for port failed !\n");
     //     return CAN_SERIAL_ERROR_SYS;
     // }
@@ -159,7 +159,7 @@ canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID) {
     // int lFctReturn = getaddrinfo(gCANSerial[pID].canIP, lPortStr, &lHints, &gCANSerial[pID].addrinfo);
     // if(0 != lFctReturn || NULL == gCANSerial[pID].addrinfo) {
     //     printf("[ERROR] <CANSerial_initcanSocket> getaddrinfo failed !\n");
-    //     printf("        Invalid address (%s) or port (%d)\n", gCANSerial[pID].canIP, gCANSerial[pID].canPort);
+    //     printf("        Invalid address (%s) or port (%d)\n", gCANSerial[pID].canIP, gCANSerial[pID].serialPort);
     //     return CAN_SERIAL_ERROR_NET;
     // }
 

@@ -25,15 +25,12 @@ typedef struct _canSerialInternalVars {
     uint8_t         instanceID;
     canSerialMode_t mode;
     bool            isInitialized;
+    bool            isCreated;
     bool            isStopped;
 
     /* Socket */
-    canSerialPortFd_t         canSocket; /* The socket used to communicate CAN frames */
-    struct sockaddr_in  socketInAddress;
-    char               *canIP;      /* IP Address */
-    canSerialPort_t           canPort;    /* Server port number */
-    struct hostent     *hostPtr;    /* Server information */
-    struct addrinfo    *addrinfo;   /* Address information fetched w/ getaddrinfo */
+    canSerialPortFd_t   canSocket;  /* The file descriptor used to communicate CAN frames */
+    canSerialPort_t     serialPort; /* Serial port */
 
     /* Rx Thread */
     bool rxThreadOn;
@@ -44,5 +41,8 @@ typedef struct _canSerialInternalVars {
 
 /* Private functions ----------------------------------- */
 canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
+
+/* Utility functions ----------------------------------- */
+bool CANSerial_moduleExists(const canSerialID_t pID);
 
 #endif /* CAN_SERIAL_PRIVATE_H */

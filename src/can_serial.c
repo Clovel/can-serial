@@ -28,16 +28,15 @@ canSerialErrorCode_t CANSerial_createModule(const canSerialID_t pID) {
     }
 
     /* check if the module already exists */
-    for(uint8_t i = 0U; i < CAN_SERIAL_MAX_NB_MODULES; i++) {
-        if(gCANSerial[i].instanceID != pID) {
-            return CAN_SERIAL_ERROR_ARG;
-        }
+    if(CANSerial_moduleExists(pID)) {
+        return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Find an empty slot */
     for(uint8_t i = 0U; i < CAN_SERIAL_MAX_NB_MODULES; i++) {
-        if(gCANSerial[i].instanceID != -1) {
-            return CAN_SERIAL_ERROR_ARG;
+        if(!gCANSerial[i].isCreated) {
+            /* This will be where the module lays */
+            gCANSerial[i].instanceID = pID;
         }
     }
 
@@ -64,11 +63,11 @@ canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode
 
     /* Initialize the module */
     gCANSerial[pID].mode       = pCANSerialMode;
-    gCANSerial[pID].instanceID = pID;
+    //gCANSerial[pID].instanceID = pID; /* Done by CANSerial_createModule */
     gCANSerial[pID].isStopped     = false;
 
     /* Set port */
-    gCANSerial[pID].canPort = pPort;
+    gCANSerial[pID].serialPort = pPort;
 
     /* Initialize the socket */
     if(CAN_SERIAL_ERROR_NONE != CANSerial_initCanSocket(pID)) {
@@ -114,7 +113,7 @@ canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMod
         return CAN_SERIAL_ERROR_NET;
     }
 
-    return CANSerial_init(pID, pCANSerialMode, gCANSerial[pID].canPort);
+    return CANSerial_init(pID, pCANSerialMode, gCANSerial[pID].serialPort);
 }
 
 canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID) {
