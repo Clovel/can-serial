@@ -1,7 +1,7 @@
 /**
  * @brief CAN over serial socket management functions
  * 
- * @file can_serial_serial_mgt.h
+ * @file can_serial_serial_port_mgt.h
  */
 
 #ifndef CAN_SERIAL_SERIAL_PORT_MGT_H
@@ -18,7 +18,7 @@
 /* Global variables ------------------------------------ */
 
 /* Socket management functions ------------------------- */
-canSerialErrorCode_t CANSerial_initCanSocket(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_initSerialPort(const canSerialID_t pID);
 canSerialErrorCode_t CANSerial_closeSerialPort(const canSerialID_t pID);
 
 #endif /* CAN_SERIAL_SERIAL_PORT_MGT_H */

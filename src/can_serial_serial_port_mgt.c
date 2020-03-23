@@ -9,7 +9,10 @@
 #include "can_serial_error_codes.h"
 
 /* C system */
-#include <fcntl.h>
+#include <fcntl.h>  /* open, fcntl */
+#include <unistd.h> /* close() */
+#include <string.h> /* strerror() */
+#include <stdio.h>  /* printf() */
 
 /* errno */
 #include <errno.h>
@@ -34,7 +37,7 @@ canSerialErrorCode_t CANSerial_initSerialPort(const canSerialID_t pID) {
     }
 
     errno = 0;
-    gCANSerial[pID].fd = open(gCANSerial[pID].fd, O_RDWR | O_NONBLOCK);
+    gCANSerial[pID].fd = open(gCANSerial[pID].serialPort, O_RDWR | O_NONBLOCK);
     if(0 > gCANSerial[pID].fd) {
         /* Could not open the port */
         printf("[ERROR] <CANSerial_initSerialPort> Failed to open the serial port\n");

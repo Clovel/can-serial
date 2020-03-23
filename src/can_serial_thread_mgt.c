@@ -86,7 +86,7 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
     ssize_t         lReadBytes      = 0;
 
     /* Starting thread routine */
-    pthread_cleanup_push((void (*)(void *))CANSerial_rxThreadCleanup, &lID);
+    pthread_cleanup_push((void (*)(void *))CANSerial_rxThreadCleanup, (void *)&lID);
 
     gCANSerial[lID].rxThreadOn = true;
 
@@ -110,7 +110,7 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
         }
         
         if(sizeof(canMessage_t) != lReadBytes) {
-            printf("[ERROR] <CANSerial_rxThread> CANSerial_recv received inconsistent data of size %d\n", lReadBytes);
+            printf("[ERROR] <CANSerial_rxThread> CANSerial_recv received inconsistent data of size %ld\n", lReadBytes);
             break;
         }
 

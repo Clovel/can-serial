@@ -29,8 +29,8 @@ typedef struct _canSerialInternalVars {
     bool            isStopped;
 
     /* Socket */
-    canSerialPortFd_t   fd;  /* The file descriptor used to communicate CAN frames */
-    char *     serialPort; /* Serial port */
+    canSerialPortFd_t  fd;  /* The file descriptor used to communicate CAN frames */
+    const char        *serialPort; /* Serial port */
 
     /* Rx Thread */
     pthread_t thread;

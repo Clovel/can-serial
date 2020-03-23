@@ -70,15 +70,18 @@ canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID);
  * @brief CAN over serial initialisation
  * 
  * @param[in]   pID     ID of the driver used.
+ * @param[in]   pMode   Mode of the CAN link (CAN, CANFD, etc.)
+ * @param[in]   pPort   Path ro the serial port used
  * 
  * @return Error code
  */
-canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const char * pPort);
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pMode, const char * pPort);
 
 /**
  * @brief CAN over serial check for initialisation
  * 
- * @param[in]   pID     ID of the driver used.
+ * @param[in]   pID             ID of the driver used.
+ * @param[out]  pIsInitialized  Boolean stating if the module is initialized or not
  * 
  * @return Error code
  */
@@ -88,10 +91,11 @@ canSerialErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * con
  * @brief CAN over serial reset
  * 
  * @param[in]   pID     ID of the driver used.
+ * @param[in]   pMode   Mode of the CAN link (CAN, CANFD, etc.)
  * 
  * @return Error code
  */
-canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pCANSerialMode);
+canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pMode);
 
 /**
  * @brief CAN over serial stop
@@ -133,7 +137,9 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
  * @brief CAN over serial recieve
  * Use this function to get a CAN message
  * 
- * @param[in]   pID     ID of the driver used.
+ * @param[in]   pID         ID of the driver used.
+ * @param[out]  pMsg        CAN message.
+ * @param[out]  pReadBytes  Number of bytes read.
  * 
  * @return error_code
  */
@@ -143,8 +149,13 @@ canSerialErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * cons
  * @brief Sets the function used to give a message to
  * the driver's caller's stack.
  * 
- * @param[in]   pID     ID of the driver used.
- * @param[in]   pFct    Function used to hand the message over to the caller.
+ * @param[in]   pID         ID of the driver used.
+ * @param[in]   pCallerID   ID of the caller.
+ * @param[in]   pFct        Function used to hand the message over to the caller.
+ * 
+ * @details The ID of the caller depends on the caller's implementation.
+ * For example, this could be the ID of the CANOpen stack using this driver.
+ * If the user's code does not use this, just put 0U.
  * 
  * @return Error code
  */

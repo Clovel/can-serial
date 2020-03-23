@@ -1,7 +1,7 @@
 /**
  * @brief CAN over serial utility functions
  * 
- * @file can_serial_tools.h
+ * @file can_serial_tools.c
  */
 
 /* Includes -------------------------------------------- */

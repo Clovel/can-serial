@@ -767,8 +767,8 @@ WARN_LOGFILE           =
 # Note: If this tag is empty the current directory is searched.
 
 INPUT                  = @doxy_main_page@ \
-                         @CMAKE_SOURCE_DIR@/src \
-                         @CMAKE_SOURCE_DIR@/inc \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../src \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../inc \
 
 USE_MDFILE_AS_MAINPAGE = @doxy_main_page@
 

@@ -40,7 +40,7 @@ canSerialErrorCode_t CANSerial_createModule(canSerialID_t * const pID) {
     return CAN_SERIAL_ERROR_NONE;
 }
 
-canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pCANSerialMode, const char * pPort) {
+canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode_t pMode, const char * pPort) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_init> No CANSerial module has the ID %u\n", pID);
@@ -57,9 +57,9 @@ canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode
     }
 
     /* Initialize the module */
-    gCANSerial[pID].mode       = pCANSerialMode;
+    gCANSerial[pID].mode       = pMode;
     //gCANSerial[pID].instanceID = pID; /* Done by CANSerial_createModule */
-    gCANSerial[pID].isStopped     = false;
+    gCANSerial[pID].isStopped  = false;
 
     /* Set port */
     gCANSerial[pID].serialPort = pPort;
@@ -93,7 +93,7 @@ canSerialErrorCode_t CANSerial_isInitialized(const canSerialID_t pID, bool * con
     return CAN_SERIAL_ERROR_NONE;
 }
 
-canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pCANSerialMode) {
+canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMode_t pMode) {
     if(!gCANSerial[pID].isInitialized) {
         /* You shouldn't "reset" a non-initialized module */
         printf("[ERROR] <CANSerial_reset> CANSerial module %u is not initialized, cannot reset.\n", pID);
@@ -108,7 +108,7 @@ canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMod
         return CAN_SERIAL_ERROR_NET;
     }
 
-    return CANSerial_init(pID, pCANSerialMode, gCANSerial[pID].serialPort);
+    return CANSerial_init(pID, pMode, gCANSerial[pID].serialPort);
 }
 
 canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID) {
