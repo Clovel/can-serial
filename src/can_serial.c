@@ -8,7 +8,7 @@
 #include "can_serial_private.h"
 #include "can_serial_error_codes.h"
 #include "can_serial.h"
-#include "can_serial_socket_mgt.h"
+#include "can_serial_serial_port_mgt.h"
 
 #include <stddef.h>
 #include <stdio.h>

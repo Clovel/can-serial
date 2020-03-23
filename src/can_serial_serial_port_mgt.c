@@ -1,7 +1,7 @@
 /**
  * @brief CAN over serial socket management functions
  * 
- * @file can_serial_socket_mgt.c
+ * @file can_serial_serial_port_mgt.c
  */
 
 /* Includes -------------------------------------------- */
