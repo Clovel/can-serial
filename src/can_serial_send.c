@@ -25,7 +25,7 @@
 /* Static variables ------------------------------------ */
 
 /* Extern variables ------------------------------------ */
-extern canSerialInternalVars_t gCANSerial;
+extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 
 cipErrorCode_t CANSerial_send(const canSerialID_t pID,
@@ -34,17 +34,17 @@ cipErrorCode_t CANSerial_send(const canSerialID_t pID,
     const uint8_t * const pData,
     const uint32_t pFlags)
 {
-    pthread_mutex_lock(&gCANSerial.mutex);
+    pthread_mutex_lock(&gCANSerial[pID].mutex);
 
     /* Check the ID */
-    if(pID != gCANSerial.instanceID) {
+    if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_send> No CAN-IP module has the ID %u\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
-    if(!gCANSerial.isInitialized) {
-        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial.instanceID);
+    if(!gCANSerial[pID].isInitialized) {
+        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial[pID].instanceID);
         return CAN_SERIAL_ERROR_NOT_INIT;
     }
 
@@ -61,8 +61,8 @@ cipErrorCode_t CANSerial_send(const canSerialID_t pID,
     ssize_t lSentBytes = 0;
 
     errno = 0;
-    lSentBytes = sendto(gCANSerial.canSocket, (const void *)&lMsg, sizeof(canMessage_t), 0, 
-        (const struct sockaddr *)&gCANSerial.socketInAddress, sizeof(gCANSerial.socketInAddress));
+    lSentBytes = sendto(gCANSerial[pID].canSocket, (const void *)&lMsg, sizeof(canMessage_t), 0, 
+        (const struct sockaddr *)&gCANSerial[pID].socketInAddress, sizeof(gCANSerial[pID].socketInAddress));
     if(sizeof(canMessage_t) != lSentBytes) {
         printf("[ERROR] <CANSerial_send> sendto failed !\n");
         if(0 != errno) {
@@ -71,7 +71,7 @@ cipErrorCode_t CANSerial_send(const canSerialID_t pID,
         return CAN_SERIAL_ERROR_NET;
     }
 
-    pthread_mutex_unlock(&gCANSerial.mutex);
+    pthread_mutex_unlock(&gCANSerial[pID].mutex);
 
     return CAN_SERIAL_ERROR_NONE;
 }

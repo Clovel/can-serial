@@ -27,20 +27,20 @@
 // static const socklen_t sAddrLen = sizeof(struct sockaddr);
 
 /* Extern variables ------------------------------------ */
-extern canSerialInternalVars_t gCANSerial;
+extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg, ssize_t * const pReadBytes) {
-    pthread_mutex_lock(&gCANSerial.mutex);
+    pthread_mutex_lock(&gCANSerial[pID].mutex);
     
     /* Check the ID */
-    if(pID != gCANSerial.instanceID) {
+    if(pID != gCANSerial[pID].instanceID) {
         printf("[ERROR] <CANSerial_recv> No CAN-IP module has the ID %u\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
-    if(!gCANSerial.isInitialized) {
-        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial.instanceID);
+    if(!gCANSerial[pID].isInitialized) {
+        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial[pID].instanceID);
         return CAN_SERIAL_ERROR_NOT_INIT;
     }
 
@@ -60,9 +60,9 @@ cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg
     //char lSrcIPAddr[INET_ADDRSTRLEN] = "";
     
     /* Receive the CAN frame */
-    *pReadBytes = recvfrom(gCANSerial.canSocket, (void *)pMsg, sizeof(canMessage_t), 0, 
+    *pReadBytes = recvfrom(gCANSerial[pID].canSocket, (void *)pMsg, sizeof(canMessage_t), 0, 
         (struct sockaddr *)&lSrcAddr, &lSrcAddrLen);
-    //*pReadBytes = recv(gCANSerial.canSocket, (void *)pMsg, sizeof(canMessage_t), 0);
+    //*pReadBytes = recv(gCANSerial[pID].canSocket, (void *)pMsg, sizeof(canMessage_t), 0);
     if(0 > *pReadBytes) {
         if(EAGAIN != errno && EWOULDBLOCK != errno) {
             printf("[ERROR] <CANSerial_send> recvfrom failed !\n");
@@ -82,7 +82,7 @@ cipErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * const pMsg
         // printf("[DEBUG] <CANSerial_send> Received %ld bytes from %s\n", *pReadBytes, lSrcIPAddr, lSrcAddrLen);
     }
 
-    pthread_mutex_unlock(&gCANSerial.mutex);
+    pthread_mutex_unlock(&gCANSerial[pID].mutex);
 
     return CAN_SERIAL_ERROR_NONE;
 }
