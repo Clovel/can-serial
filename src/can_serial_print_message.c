@@ -17,7 +17,7 @@
 
 /* Prnt message function ------------------------------- */
 void CANSerial_printMessage(const canMessage_t * const pMsg) {
-    printf("CAN-IP Message :\n");
+    printf("CANSerial Message :\n");
     printf("\tID    : 0x%03X\n", pMsg->id);
     printf("\tSize  : %u\n", pMsg->size);
     printf("\tFlags : 0x%08X\n", pMsg->flags);

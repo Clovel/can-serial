@@ -34,7 +34,7 @@ canSerialErrorCode_t CANSerial_setPutMessageFunction(const canSerialID_t pID,
 {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
-        printf("[ERROR] <CANSerial_setPutMessageFunction> No CAN-IP module has the ID %u\n", pID);
+        printf("[ERROR] <CANSerial_setPutMessageFunction> No CANSerial module has the ID %u\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 
@@ -66,13 +66,13 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
 
     /* Check the ID */
     if(lID != gCANSerial[lID].instanceID) {
-        printf("[ERROR] <CANSerial_rxThread> No CAN-IP module has the ID %u\n", lID);
+        printf("[ERROR] <CANSerial_rxThread> No CANSerial module has the ID %u\n", lID);
         return;
     }
 
     /* Check if the module is already initialized */
     if(!gCANSerial[lID].isInitialized) {
-        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial[lID].instanceID);
+        printf("[ERROR] <CANSerial_rxThread> CANSerial module %u is not initialized.\n", gCANSerial[lID].instanceID);
         return;
     }
 
@@ -135,7 +135,7 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
 canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
-        printf("[ERROR] <CANSerial_startRxThread> No CAN-IP module has the ID %u\n", pID);
+        printf("[ERROR] <CANSerial_startRxThread> No CANSerial module has the ID %u\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 
@@ -159,7 +159,7 @@ canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
 canSerialErrorCode_t CANSerial_isRxThreadOn(const canSerialID_t pID, bool * const pOn) {
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
-        printf("[ERROR] <CANSerial_isRxThreadOn> No CAN-IP module has the ID %u\n", pID);
+        printf("[ERROR] <CANSerial_isRxThreadOn> No CANSerial module has the ID %u\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 

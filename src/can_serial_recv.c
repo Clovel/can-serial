@@ -33,13 +33,13 @@ canSerialErrorCode_t CANSerial_recv(const canSerialID_t pID, canMessage_t * cons
     
     /* Check the ID */
     if(pID != gCANSerial[pID].instanceID) {
-        printf("[ERROR] <CANSerial_recv> No CAN-IP module has the ID %u\n", pID);
+        printf("[ERROR] <CANSerial_recv> No CANSerial module has the ID %u\n", pID);
         return CAN_SERIAL_ERROR_ARG;
     }
 
     /* Check if the module is already initialized */
     if(!gCANSerial[pID].isInitialized) {
-        printf("[ERROR] <CANSerial_rxThread> CAN-IP module %u is not initialized.\n", gCANSerial[pID].instanceID);
+        printf("[ERROR] <CANSerial_rxThread> CANSerial module %u is not initialized.\n", gCANSerial[pID].instanceID);
         return CAN_SERIAL_ERROR_NOT_INIT;
     }
 

@@ -5,7 +5,7 @@
  */
 
 /* Includes -------------------------------------------- */
-/* can-ip */
+/* CANSerial */
 #include "can_serial.h"
 #include "can_serial_error_codes.h"
 
