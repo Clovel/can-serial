@@ -60,7 +60,7 @@ int main(const int argc, const char * const * const argv) {
     }
 
     unsigned int lErrorCode = 0U;
-    const char *lPort = *(const char *)(argv + 1U);
+    const char *lPort = (const char *)(argv + 1U);
 
     /* Create a CANSerial module */
     uint8_t lID = 0U;
