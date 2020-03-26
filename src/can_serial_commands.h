@@ -32,6 +32,22 @@
 
 /* Serial port command functions ----------------------- */
 /**
+ * @brief Send a command to the CANUSB device
+ * via the serial port
+ * 
+ * @param[in]   pID         The Id of the CAN driver
+ * @param[in]   pCmd        The string representing the command
+ * @param[out]  pAnswer     The answer received from the CAN device
+ * 
+ * $@details
+ * 
+ * @return Error code
+ */
+canSerialErrorCode_t CANSerial_sendCmd(const canSerialID_t pID,
+    const char * const pCmd,
+    char * const pAnswer);
+
+/**
  * @brief Send the command to OPEN the CAN channel
  * to the CAN device.
  * 

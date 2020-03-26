@@ -43,19 +43,7 @@ static const struct timeval sTimeOut = {
 extern canSerialInternalVars_t gCANSerial[CAN_SERIAL_MAX_NB_MODULES];
 
 /* Serial port command functions ----------------------- */
-/**
- * @brief Send a command to the CANUSB device
- * via the serial port
- * 
- * @param[in]   pID         The Id of the CAN driver
- * @param[in]   pCmd        The string representing the command
- * @param[out]  pResponse   The answer received from the CAN device
- * 
- * $@details
- * 
- * @return Error code
- */
-static canSerialErrorCode_t CANSerial_sendCmd(const canSerialID_t pID,
+canSerialErrorCode_t CANSerial_sendCmd(const canSerialID_t pID,
     const char * const pCmd,
     char * const pAnswer)
 {
