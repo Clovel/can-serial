@@ -114,6 +114,15 @@ canSerialErrorCode_t CANSerial_reset(const canSerialID_t pID, const canSerialMod
     gCANSerial[pID].isStopped = true;
     gCANSerial[pID].isInitialized = false;
 
+    /* Stop reception thread */
+    if(gCANSerial[pID].rxThreadOn) {
+        if(CAN_SERIAL_ERROR_NONE != CANSerial_stopRxThread(pID)) {
+            printf("[ERROR] <CANSerial_reset> Failed to stop reception thread\n");
+
+            return CAN_SERIAL_ERROR_SYS;
+        }
+    }
+
     /* Close the socket */
     if(CAN_SERIAL_ERROR_NONE != CANSerial_closeSerialPort(pID)) {
         return CAN_SERIAL_ERROR_NET;
