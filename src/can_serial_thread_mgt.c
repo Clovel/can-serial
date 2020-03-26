@@ -164,10 +164,19 @@ canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
         return CAN_SERIAL_ERROR_CONFIG;
     }
 
+    if(gCANSerial[pID].rxThreadOn) {
+        printf("[ERROR] <CANSerial_startRxThread> The %ud CANSerial module's reception threas is already running.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
+
     int lSysResult = 0;
+    errno = 0;
     lSysResult = pthread_create(&gCANSerial[pID].thread, NULL, (void * (*)(void *))CANSerial_rxThread, (void *)&pID);
     if (0 < lSysResult) {
         printf("[ERROR] <CANSerial_startRxThread> Thread creation failed\n");
+        if(0 != errno) {
+            printf("        errno = %d (%s)\n", errno, strerror(errno));
+        }
         return CAN_SERIAL_ERROR_SYS;
     } else {
         printf("[INFO ] <CANSerial_startRxThread> Thread creation successful\n");
