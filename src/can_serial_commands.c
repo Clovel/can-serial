@@ -24,23 +24,6 @@
 #define CAN_SERIAL_ANSWER_TIMEOUT_US    100U    /**< Timeout us value */
 #define CAN_SERIAL_ANSWER_TIMEOUT_S     0U      /**< Timeout s value */
 
-/**
- * @brief Maximum answer size (6 + 2 for margin)
- * 
- * @details According to the Lawicel CANUSB document,
- * it seems that the maximum size for a command's
- * answer is 6 bytes.
- */
-#define CAN_SERIAL_ANSWER_MAX_SIZE      8U
-
-#define CAN_SERIAL_CMD_BELL             "\x07" /**< Indicates an error */
-#define CAN_SERIAL_CMD_OK               "\r"   /**< "OK" answer */
-#define CAN_SERIAL_CMD_OPEN             "O\r"  /**< Open CAN channel cmd */
-#define CAN_SERIAL_CMD_CLOSE            "C\r"  /**< Close CAN channel cmd */
-#define CAN_SERIAL_CMD_SN               "N\r"  /**< Get Serial Number cmd */
-#define CAN_SERIAL_CMD_VN               "V\r"  /**< Get Version Number cmd */
-#define CAN_SERIAL_CMD_STAUTS_FLAGS     "F\r"  /**< Read Status Flags cmd */
-
 /* Type definitions ------------------------------------ */
 
 /* Global variables ------------------------------------ */
