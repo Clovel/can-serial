@@ -10,9 +10,9 @@
 #include "can_serial.h"
 #include "can_serial_serial_port_mgt.h"
 
+/* C system */
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h> /* For rand() */
 
 /* Defines --------------------------------------------- */
 
