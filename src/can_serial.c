@@ -141,7 +141,16 @@ canSerialErrorCode_t CANSerial_stop(const canSerialID_t pID) {
         printf("[ERROR] <CANSerial_stop> CANSerial module %u is not initialized, cannot stop it.\n", pID);
         return CAN_SERIAL_ERROR_NOT_INIT;
     }
-    
+
+    /* Stop reception thread */
+    if(gCANSerial[pID].rxThreadOn) {
+        if(CAN_SERIAL_ERROR_NONE != CANSerial_stopRxThread(pID)) {
+            printf("[ERROR] <CANSerial_reset> Failed to stop reception thread\n");
+
+            return CAN_SERIAL_ERROR_SYS;
+        }
+    }
+
     gCANSerial[pID].isStopped = true;
 
     return CAN_SERIAL_ERROR_NONE;
