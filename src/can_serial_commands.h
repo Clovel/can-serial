@@ -16,9 +16,18 @@
  * 
  * @details According to the Lawicel CANUSB document,
  * it seems that the maximum size for a command's
+ * answer is 26 bytes.
+ */
+#define CAN_SERIAL_ANSWER_MAX_SIZE      32U
+
+/**
+ * @brief Maximum command size (6 + 2 for margin)
+ * 
+ * @details According to the Lawicel CANUSB document,
+ * it seems that the maximum size for a command's
  * answer is 6 bytes.
  */
-#define CAN_SERIAL_ANSWER_MAX_SIZE      8U
+#define CAN_SERIAL_CMD_MAX_SIZE         CAN_SERIAL_ANSWER_MAX_SIZE
 
 #define CAN_SERIAL_END_OF_CMD           '\r'    /**< End-of-command delimiter */
 

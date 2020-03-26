@@ -47,5 +47,8 @@ canSerialErrorCode_t CANSerial_stopRxThread(const canSerialID_t pID);
 
 /* Utility functions ----------------------------------- */
 bool CANSerial_moduleExists(const canSerialID_t pID);
+canSerialErrorCode_t CANUSBToCANMsg(char * const pBuf,
+    canMessage_t * const pMsg,
+    const ssize_t * const pBufSize);
 
 #endif /* CAN_SERIAL_PRIVATE_H */
