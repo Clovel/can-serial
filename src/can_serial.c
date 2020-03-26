@@ -77,6 +77,7 @@ canSerialErrorCode_t CANSerial_init(const canSerialID_t pID, const canSerialMode
 
     /* Initialize thread related variables */
     gCANSerial[pID].rxThreadOn    = false;
+    gCANSerial[pID].stopThreadCmd = false;
     gCANSerial[pID].callerID      = 0U;
     gCANSerial[pID].putMessageFct = NULL;
 

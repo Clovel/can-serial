@@ -16,6 +16,9 @@
 #include <pthread.h>
 #include <unistd.h>
 
+/* errno */
+#include <errno.h>
+
 /* Defines --------------------------------------------- */
 
 /* Type definitions ------------------------------------ */
@@ -100,7 +103,7 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
 
     /* Infinite Rx loop */
     printf("[DEBUG] <CANSerial_rxThread> Starting RX thread.\n");
-    while (CAN_SERIAL_ERROR_NONE == lErrorCode) {
+    while (CAN_SERIAL_ERROR_NONE == lErrorCode && !gCANSerial[lID].stopThreadCmd) {
         /* Initialize the CANSerial message */
         memset(&lMsg, 0, sizeof(canMessage_t));
 
@@ -168,6 +171,34 @@ canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID) {
         return CAN_SERIAL_ERROR_SYS;
     } else {
         printf("[INFO ] <CANSerial_startRxThread> Thread creation successful\n");
+    }
+
+    return CAN_SERIAL_ERROR_NONE;
+}
+
+canSerialErrorCode_t CANSerial_stopRxThread(const canSerialID_t pID) {
+    /* Check the ID */
+    if(!CANSerial_moduleExists(pID)) {
+        printf("[ERROR] <CANSerial_startRxThread> No CANSerial module has the ID %u.\n", pID);
+        return CAN_SERIAL_ERROR_ARG;
+    }
+
+    /* Set the stop command */
+    pthread_mutex_lock(&gCANSerial[pID].mutex);
+    gCANSerial[pID].stopThreadCmd = true;
+    pthread_mutex_unlock(&gCANSerial[pID].mutex);
+
+    int lSysResult = 0;
+    errno = 0;
+    lSysResult = pthread_join(&gCANSerial[pID].thread, NULL);
+    if (0 < lSysResult) {
+        printf("[ERROR] <CANSerial_stopRxThread> Thread termination failed\n");
+        if(0 != errno) {
+            printf("        errno = %d (%s)\n", errno, strerror(errno));
+        }
+        return CAN_SERIAL_ERROR_SYS;
+    } else {
+        printf("[INFO ] <CANSerial_startRxThread> Thread termination successful\n");
     }
 
     return CAN_SERIAL_ERROR_NONE;

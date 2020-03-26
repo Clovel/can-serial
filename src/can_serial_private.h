@@ -35,6 +35,7 @@ typedef struct _canSerialInternalVars {
     /* Rx Thread */
     pthread_t thread;
     bool rxThreadOn;
+    bool stopThreadCmd;
     uint8_t callerID;
     canSerialPutMessageFct_t putMessageFct;
     pthread_mutex_t mutex;
@@ -42,6 +43,7 @@ typedef struct _canSerialInternalVars {
 
 /* Private functions ----------------------------------- */
 canSerialErrorCode_t CANSerial_startRxThread(const canSerialID_t pID);
+canSerialErrorCode_t CANSerial_stopRxThread(const canSerialID_t pID);
 
 /* Utility functions ----------------------------------- */
 bool CANSerial_moduleExists(const canSerialID_t pID);
