@@ -36,12 +36,16 @@ extern "C" {
 #define CAN_SERIAL_MAX_PORT_LEN 1U
 #endif /* CAN_SERIAL_MAX_PORT_LEN */
 
-#define CAN_SERIAL_ID_STD_FLAG  0x00000000U     /**< CAN Standard (11 bits) ID flag */
-#define CAN_SERIAL_ID_EXT_FLAG  0x00000001U     /**< CAN Extended (29 bits) ID flag */
-#define CAN_SERIAL_ID_MASK      0x00000001U     /**< CAN ID size flag mask */
+#define CAN_SERIAL_ID_STD_FLAG      0x00000000U     /**< CAN Standard (11 bits) ID flag */
+#define CAN_SERIAL_ID_EXT_FLAG      0x00000001U     /**< CAN Extended (29 bits) ID flag */
+#define CAN_SERIAL_ID_MASK          0x00000001U     /**< CAN ID size flag mask */
 
-#define CAN_SERIAL_ID_STD_MASK  0x000007FFU     /**< CAN Standard (11 bits) ID mask */
-#define CAN_SERIAL_ID_EXT_MASK  0x1FFFFFFFU     /**< CAN Extended (29 bits) ID mask */
+#define CAN_SERIAL_NOT_RTR_FLAG     0x00000000U     /**< Normal non-RTR frame flag */
+#define CAN_SERIAL_RTR_FLAG         0x00000010U     /**< RTR frame flag */
+#define CAN_SERIAL_ID_MASK          0x00000010U     /**< RTR flag mask */
+
+#define CAN_SERIAL_ID_STD_MASK      0x000007FFU     /**< CAN Standard (11 bits) ID mask */
+#define CAN_SERIAL_ID_EXT_MASK      0x1FFFFFFFU     /**< CAN Extended (29 bits) ID mask */
 
 /* Type definitions ------------------------------------ */
 typedef struct _canMessage {
