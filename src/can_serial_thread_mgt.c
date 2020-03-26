@@ -66,6 +66,9 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
         return;
     }
 
+    /* Declare the CANSerial message */
+    canMessage_t lMsg;
+
     /* Save the parameter before it is destroyed by the tread creator */
     const canSerialID_t lID = *pID;
 
@@ -98,16 +101,25 @@ static void CANSerial_rxThread(const canSerialID_t * const pID) {
     /* Infinite Rx loop */
     printf("[DEBUG] <CANSerial_rxThread> Starting RX thread.\n");
     while (CAN_SERIAL_ERROR_NONE == lErrorCode) {
-        /* Initialize a CANSerial message */
-        canMessage_t lMsg;
+        /* Initialize the CANSerial message */
         memset(&lMsg, 0, sizeof(canMessage_t));
+
+        /* Lock the Mutex */
+        pthread_mutex_lock(&gCANSerial[lID].mutex);
         
         /* Reading a CAN message */
         lErrorCode = CANSerial_recv(lID, &lMsg, &lReadBytes);
         if(CAN_SERIAL_ERROR_NONE != lErrorCode) {
             printf("[ERROR] <CANSerial_rxThread> CANSerial_recv failed w/ error code %u\n", lErrorCode);
+
+            /* Unlock the Mutex */
+            pthread_mutex_unlock(&gCANSerial[lID].mutex);
+
             break;
         }
+
+        /* Unlock the Mutex */
+        pthread_mutex_unlock(&gCANSerial[lID].mutex);
 
         if(CAN_SERIAL_ERROR_NONE == lErrorCode && 0 > lReadBytes) {
             /* Nothing read, the socket is non-blocking */
