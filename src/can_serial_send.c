@@ -13,6 +13,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 /* errno */
 #include <errno.h>
@@ -40,7 +41,7 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
         return CAN_SERIAL_ERROR_ARG;
     }
 
-    if(NULL == pMsg) {
+    if(NULL == pData) {
         printf("[ERROR] <CANSerial_send> Message ptr is NULL\n");
         return CAN_SERIAL_ERROR_ARG;
     }
@@ -50,8 +51,12 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
         return CAN_SERIAL_ERROR_ARG;
     }
 
-    char lCmd[CAN_SERIAL_ANSWER_MAX_SIZE];
-    char lBuf[CAN_SERIAL_ANSWER_MAX_SIZE];
+    canSerialErrorCode_t lErrorCode = CAN_SERIAL_ERROR_NONE;
+
+    char *lCmd = (char *)malloc(CAN_SERIAL_ANSWER_MAX_SIZE);
+    char *lBuf = (char *)malloc(CAN_SERIAL_ANSWER_MAX_SIZE);
+    memset(lCmd, 0, CAN_SERIAL_ANSWER_MAX_SIZE);
+    memset(lBuf, 0, CAN_SERIAL_ANSWER_MAX_SIZE);
 
     /* Build the command string.
      * The format for a CAN message is : 
@@ -78,7 +83,7 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
         /* Extended ID */
 
         if(CAN_SERIAL_ID_EXT_MASK < pCANID) {
-            printf("[ERROR] <CANSerial_send> CAN ID out of bounds (%lu)\n", pCANID);
+            printf("[ERROR] <CANSerial_send> CAN ID out of bounds (%u)\n", pCANID);
             return CAN_SERIAL_ERROR_ARG;
         }
 
@@ -92,7 +97,7 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
     } else {
         /* Standard ID */
         if(CAN_SERIAL_ID_STD_MASK < pCANID) {
-            printf("[ERROR] <CANSerial_send> CAN ID out of bounds (%lu)\n", pCANID);
+            printf("[ERROR] <CANSerial_send> CAN ID out of bounds (%u)\n", pCANID);
             return CAN_SERIAL_ERROR_ARG;
         }
 
@@ -121,7 +126,7 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
     pthread_mutex_lock(&gCANSerial[pID].mutex);
 
     /* Send the command */
-    if(CAN_SERIAL_ERROR_NONE != CANSerial_sendCmd(pID, CAN_SERIAL_CMD_CLOSE, lBuf)) {
+    if(CAN_SERIAL_ERROR_NONE != CANSerial_sendCmd(pID, lCmd, lBuf)) {
         printf("[ERROR] <CANSerial_send> Failed to send the command \"%s\"\n", CAN_SERIAL_CMD_OPEN);
         return CAN_SERIAL_ERROR_SYS;
     }
@@ -131,14 +136,20 @@ canSerialErrorCode_t CANSerial_send(const canSerialID_t pID,
     /* Check the answer */
     if(0 == strncmp(CAN_SERIAL_CMD_OK, lBuf, sizeof(CAN_SERIAL_CMD_OK))) {
         /* Got "OK " */
-        return CAN_SERIAL_ERROR_NONE;
+        lErrorCode = CAN_SERIAL_ERROR_NONE;
     } else if(0 == strncmp(CAN_SERIAL_CMD_BELL, lBuf, sizeof(CAN_SERIAL_CMD_BELL))) {
         /* Got "Bell" */
         printf("[ERROR] <CANSerial_send> Got \"BELL\" (error) from device");
-        return CAN_SERIAL_ERROR_NET;
+        lErrorCode = CAN_SERIAL_ERROR_NET;
     } else {
         /* Unknown answer... */
         printf("[ERROR] <CANSerial_send> Got unknown answer from device : %s", lBuf);
-        return CAN_SERIAL_ERROR_NET;
+        lErrorCode = CAN_SERIAL_ERROR_NET;
     }
+
+    /* Free allocated memory */
+    free(lCmd);
+    free(lBuf);
+
+    return lErrorCode;
 }
