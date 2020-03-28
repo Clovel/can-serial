@@ -52,7 +52,7 @@ canSerialErrorCode_t CANUSBToCANMsg(char * const pBuf,
     }
 
     uint8_t lDataOffset = 0U;
-    uint8_t lMinSize    = 0U; /* Minimum buffer size */
+    ssize_t lMinSize    = 0U; /* Minimum buffer size */
 
     switch(*pBuf) {
         case 't':
@@ -174,7 +174,7 @@ canSerialErrorCode_t CANUSBToCANMsg(char * const pBuf,
             /* Replace it w/ a NULL terminator for sscanf */
             *(pBuf + lDataOffset + i + 1U) = '\0';
             /* Read the data w/ sscanf */
-            sscanf(pBuf + lDataOffset + i, "%x", pMsg->data[i]);
+            sscanf(pBuf + lDataOffset + i, "%x", pMsg->data + i);
             /* Put the replaced value back */
             *(pBuf + lDataOffset + i + 1U) = lSavedChar;
         }
