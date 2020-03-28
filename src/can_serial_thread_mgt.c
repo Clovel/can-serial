@@ -199,7 +199,7 @@ canSerialErrorCode_t CANSerial_stopRxThread(const canSerialID_t pID) {
 
     int lSysResult = 0;
     errno = 0;
-    lSysResult = pthread_join(&gCANSerial[pID].thread, NULL);
+    lSysResult = pthread_join(gCANSerial[pID].thread, NULL);
     if (0 < lSysResult) {
         printf("[ERROR] <CANSerial_stopRxThread> Thread termination failed\n");
         if(0 != errno) {
